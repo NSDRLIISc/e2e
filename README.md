@@ -1,2 +1,2 @@
 # e2e
-End-to-end code for predicting Curie temp. and other magnetic properties of 2D materials.
+End-to-end code for predicting Curie temp. and other magnetic properties of 2D materials. Re-optimied for Quantum Espresso (QE)
