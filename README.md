@@ -1,4 +1,6 @@
-# e2e
+# WORK IN PROGRESS
+
+
 End-to-end code for predicting Curie temp. and other magnetic properties of 2D materials. Re-optimied for Quantum Espresso (QE)
 
 The code needs Python > 3.6 to run. The following libraries are required all of which can be installed using pip. These packages in turn have their own dependencies which would be installed automatically.
@@ -10,8 +12,9 @@ pymatgen may not recognise a lot of elements as magnetic. you have to manually e
 The code name is e2e.py, and it shoud be run in a directory containing all the necessary input files (input, structure file and optionally input_MC). An example input and input_MC file is given below. The tags are self-explanatory.
 
 ********
-input
+## Input
 ********
+```
 structure_file = 1743.json
 VASP_command_std = mpirun -n 4 vasp_gpu > vasp.log
 VASP_command_ncl = mpirun -n 4 vasp_gpu_ncl > vasp.log
@@ -19,11 +22,13 @@ max_neighbors = 5
 GPU_accel = True
 more_than_2_metal_layers = False
 NSIM = 12
+```
 *********
 
 ********
-input_MC
+## Input MC
 ********
+```
 directory = MC_Heisenberg
 repeat = 50 50 1
 restart = 0
@@ -42,13 +47,15 @@ div_T = 25
 mu (mu_B/atom) = 3.541955
 MCS = 100000
 thresh = 10000
+```
 *********
 
-the pickled ML pipelines can be loaded into automatminer and used to perform predictions on new datasets. The following example script does this for the TC regression problem.
+The pickled ML pipelines can be loaded into automatminer and used to perform predictions on new datasets. The following example script does this for the TC regression problem.
 
 ********
-example_script
+## Example Script
 ********
+```
 from automatminer.pipeline import MatPipe
 from sklearn.metrics.regression import mean_squared_error
 from pickle import load
@@ -68,3 +75,4 @@ print(df)
 
 mse = mean_squared_error(df[['TC_exact']], df[['TC_exact predicted']])
 print(mse)
+```
