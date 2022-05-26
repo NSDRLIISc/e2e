@@ -1,0 +1,139 @@
+\documentclass[12pt]{article}
+\usepackage[margin=1in]{geometry}
+\usepackage[all]{xy}
+\usepackage{amsmath,amsthm,amssymb,color,latexsym}
+\usepackage{geometry}
+\usepackage{physics}
+\usepackage{mathtools}
+\geometry{letterpaper}    
+\usepackage{graphicx}
+\usepackage{nicefrac}
+\usepackage{enumitem}
+\usepackage{minted}
+\newcommand{\pmint}[1]{\mintinline{Python}{#1}}
+\usepackage{hyperref}
+\hypersetup{
+    colorlinks=true,
+    urlcolor=cyan,
+    }
+
+\begin{document}
+\noindent e2e Notes \hfill Andres Covarrubias    \\
+5/17/22
+
+\hrulefill
+\section*{Imports (Lines 1-22)}
+\subsection*{\href{https://pymatgen.org/}{pymatgen}}
+A robust, open-source Python library for materials analysis.
+
+    \subsubsection*{\href{https://pymatgen.org/pymatgen.io.vasp.html?highlight=io\%20vasp\#module-pymatgen.io.vasp}{pymatgen.io.vasp}} Implements modules for input and output to and from VASP. See VASP to QE table for more information. 
+    
+    \subsubsection*{\href{https://pymatgen.org/pymatgen.core.html}{pymatgen.core}} A package containing core modules and classes for representing structures and operations on them. The first import is the \href{https://pymatgen.org/pymatgen.core.structure.html?highlight=structure#module-pymatgen.core.structure}{Structure} module which provides classes used to define a non-periodic molecule and a periodic structure. The second import is \href{https://pymatgen.org/pymatgen.core.periodic_table.html?highlight=element#pymatgen.core.periodic_table.Element}{periodic\textunderscore table.Element} which is an \href{https://docs.python.org/3/library/enum.html}{enum} which represents an element in the periodic table. 
+    
+    \subsubsection*{\href{https://pymatgen.org/pymatgen.analysis.magnetism.analyzer.html}{pymatgen.analysis.magnetism.analyzer}} A module which provides some useful functions for dealing with magnetic Structures. The first import is  \href{https://pymatgen.org/pymatgen.analysis.magnetism.analyzer.html?highlight=magneticstructureenumerator#pymatgen.analysis.magnetism.analyzer.MagneticStructureEnumerator}{MagneticStructureEnumerator} which will automatically generate a set of transformations for a given structure and produce a list of plausible magnetic orderings. The second import is \href{https://pymatgen.org/pymatgen.analysis.magnetism.analyzer.html?highlight=collinearmagneticstructureanalyzer#pymatgen.analysis.magnetism.analyzer.CollinearMagneticStructureAnalyzer}{CollinearMagneticStructureAnalyzer} which provides a few helpful methods to analyze collinear magnetic structures.
+
+\subsection*{\href{https://docs.python.org/3/library/sys.html}{sys}}
+Built in module which provides access to some variables used or maintained by the interpreter and to functions that interact strongly with the interpreter.
+
+\subsection*{\href{https://docs.python.org/3/library/os.html}{os}}
+Built in module which provides a portable way of using operating system dependent functionality.
+
+\subsection*{\href{https://docs.python.org/3/library/shutil.html}{shutil}}
+Built in module which offers a number of high-level operations on files and collections of files. In particular, functions are provided which support file copying and removal. Specifically imports \href{https://docs.python.org/3/library/shutil.html?highlight=copyfile#shutil.copyfile}{copyfile}, which copies a file from a source path to a destination path. 
+
+\subsection*{\href{https://docs.python.org/3/library/subprocess.html}{subprocess}}
+Built in module which allows you to spawn new processes, connect to their input/output/error pipes, and obtain their return codes. Specifically imports \href{https://docs.python.org/3/library/subprocess.html?highlight=popen\#subprocess.Popen}{Popen} which executes a child program in a new process.
+
+\subsection*{\href{https://docs.python.org/3/library/datetime.html}{datetime}}
+Built in module which supplies classes for manipulating dates and times.
+
+\subsection*{\href{https://docs.python.org/3/library/time.html}{time}}
+Built in module which provides various time-related functions. The first import is \href{https://docs.python.org/3/library/time.html#time.time}{time} which returns the time in seconds since the epoch as a floating point number. The second import is \href{https://docs.python.org/3/library/time.html#time.sleep}{sleep} which suspends execution of the calling thread for the given number of seconds. 
+
+\subsection*{\href{https://wiki.fysik.dtu.dk/ase/}{ase}}
+The Atomic Simulation Environment (ASE) is a set of tools and Python modules for setting up, manipulating, running, visualizing and analyzing atomistic simulations. The code is freely available under the GNU LGPL license.
+
+    \subsubsection*{\href{https://wiki.fysik.dtu.dk/ase/ase/io/io.html\#module-ase.io}{ase.io}}
+    ASE module which handles file i/o Specifically imports \href{https://wiki.fysik.dtu.dk/ase/ase/io/io.html#ase.io.read}{read} and \href{https://wiki.fysik.dtu.dk/ase/ase/io/io.html#ase.io.write}{write}. Compatible with both QE and VASP. 
+    
+    \subsubsection*{\href{https://wiki.fysik.dtu.dk/ase/ase/build/build.html?highlight=build\#module-ase.build}{ase.build}}
+    ASE module for creating molecular structures. The first import is \href{https://wiki.fysik.dtu.dk/ase/ase/build/tools.html?highlight=make_supercell#ase.build.make_supercell}{make\textunderscore supercell} which generates a supercell by applying a general transformation to the input configuration. The second import is \href{https://wiki.fysik.dtu.dk/ase/ase/build/tools.html?highlight=sort#ase.build.sort}{sort} which returns a new Atoms object with sorted atomic order.
+
+\subsection*{\href{https://numpy.org/doc/stable/}{numpy}}
+A Python library that provides a multidimensional array object, various derived objects (such as masked arrays and matrices), and an assortment of routines for fast operations on arrays, including mathematical, logical, shape manipulation, sorting, selecting, I/O, discrete Fourier transforms, basic linear algebra, basic statistical operations, random simulation and much more.
+
+\subsection*{\href{https://docs.sympy.org/latest/index.html}{sympy}}
+A Python library for symbolic mathematics. The first import is \href{https://docs.sympy.org/latest/modules/core.html?highlight=symbol#module-sympy.core.symbol}{Symbol} which is a class facilitates symbolic calculations in Python. The second import is \href{https://docs.sympy.org/latest/modules/solvers/solveset.html?highlight=linsolve#sympy.solvers.solveset.linsolve}{linsolve} which solves a system of $N$ linear equations with $M$ variables
+
+\subsection*{\href{https://docs.python.org/3/library/itertools.html}{itertools}}
+Built in module which implements a number of iterator building blocks. Specifically imports \href{https://docs.python.org/3/library/itertools.html#itertools.combinations}{combinations} which returns a variable length subsequence of elements from an iterable input. 
+
+\subsection*{\href{https://docs.python.org/3/library/math.html}{math}}
+Built in module which provides access to the mathematical functions defined by the C standard.
+
+\subsection*{\href{https://numba.readthedocs.io/en/stable/index.html}{numba}}
+A just-in-time (jit) compiler for Python. Works best on code that uses NumPy arrays, functions, and loops. The first import is \href{https://numba.pydata.org/numba-doc/latest/user/jit.html}{jit} which is a decorator that flags a function for jit compilation. The second import is \href{https://numba.pydata.org/numba-doc/latest/cuda/index.html}{cuda} which extends jit to GPU compilation. Need to install the cudatoolkit in order to use. 
+
+\subsection*{\href{https://docs.python.org/3/library/pickle.html}{pickle}}
+Built in module which implements binary protocols for serializing and de-serializing a Python object structure. The first import is \href{https://docs.python.org/3/library/pickle.html?highlight=load#pickle.load}{load} which reads the pickled representation of an object from an open file object and returns the reconstituted object hierarchy specified therein. The second import is \href{https://docs.python.org/3/library/pickle.html?highlight=load#pickle.dump}{dump} which writes the pickled representation of an object to an open file object. 
+
+\section*{Setting parameters and input parsing (Lines 29-93)}
+Input parsing set up to read a set of key-value pairs. 
+\section*{Function Definitions (Lines 98-270)}
+\subsection*{Pre-Defined Functions}
+\begin{itemize}
+    \item \mintinline{Python}{replaceText(fileName,toFind,replaceWith)} 
+    
+    
+    Opens and reads \mintinline{Python}{fileName}, replaces \mintinline{Python}{toFind} with \mintinline{Python}{replaceWith}, then re-writes the file with the new text. 
+    
+    \item \mintinline{Python}{writeLog(string)} 
+    
+    Appends \mintinline{Python}{string} to the log along with the \mintinline{Python}{datetime}
+    
+    \item \mintinline{Python}{dist_neighbors(struct)}
+    
+    Calculates, logs, and returns the distances of neighboring atoms in \mintinline{Python}{struct}. 
+    
+    \item \mintinline{Python}{Nfinder(struct_mag,site,d_N,dr)}
+    
+    Finds and returns the coordinates of both \mintinline{Python}{site} and all the neighbors within \mintinline{Python}{d_N-dr} and \mintinline{Python}{d_N+dr}
+    
+    \item \mintinline{Python}{my_kernel(all_coords,coord_N,index)}
+    
+    Sets up kernel for GPU processing
+    
+    \item \mintinline{Python}{NfinderGPU(struc_mag,site, d_N, dr)}
+    
+    \mintinline{Python}{Nfinder} optimized for GPU processing
+    
+    \item \mintinline{Python}{find_max_len(lst)}
+    
+    Calculates and returns the max length of \mintinline{Python}{lst}
+    
+    \item \mintinline{Python}{make_homogenous(lst)}
+    
+    Standardizes lists 
+    \item \mintinline{Python}{tFunc(spin_abs,spin_x,spin_y,spin_z,mags,magsqs,T,J2flag,J3flag,J4flag,J5flag)}
+    
+    Monte-Carlo Algorithm w/ JIT compilation
+\end{itemize}
+\section*{Generating magnetic spin configurations (Lines 292-318)}
+\section*{Auxiliary dictionaries (Lines 328-368)}
+\section*{Collinear energy calculation (372-496) }
+\section*{Magnetization calculations / classifications (Lines 498-625)}
+\section*{Non-collinear energy calculations (Lines 628-817) }
+\section*{Hamiltonian Fitting (Lines 820-1219)}
+Fits the \href{https://en.wikipedia.org/wiki/Quantum_Heisenberg_model}{Heisenberg Hamiltonian} 
+\begin{align*}
+    H &= -\frac{1}{2}\sum_{i,j} J_1\textbf{S}_i\textbf{S}_j-\frac{1}{2}\sum_{i,l} J_2\textbf{S}_i\textbf{S}_l-\frac{1}{2}\sum_{i,m} J_3\textbf{S}_i\textbf{S}_m-\frac{1}{2}\sum_{i,n} J_4\textbf{S}_i\textbf{S}_n \\
+    &- \sum_i\Big[ k_xS_{ix}^2 - k_y S_{iy}^2- k_z S_{iz}^2\Big]
+\end{align*}
+\section*{Neighbor Mapping (Lines 1271-1495)}
+\section*{Monte-Carlo Simulation (Lines 1497-1526)}
+\section*{Personal Notes}
+\begin{itemize}
+    \item Research non-collinear calculations in QE.
+    \item Maybe replace instances of range(len()) in function definitions?
+\end{itemize}
+\end{document}
