@@ -1,0 +1,110 @@
+\documentclass[12pt]{article}
+\usepackage[margin=1in]{geometry}
+\usepackage[all]{xy}
+\usepackage{amsmath,amsthm,amssymb,color,latexsym}
+\usepackage{geometry}
+\usepackage{physics}
+\usepackage{mathtools}
+\geometry{letterpaper}    
+\usepackage{graphicx}
+\usepackage{nicefrac}
+\usepackage{enumitem}
+\usepackage{minted}
+\usepackage{tabularx,ragged2e}
+\newcolumntype{x}{>{\small\raggedright\arraybackslash}X}
+\usepackage{cancel}
+\usepackage{multirow}
+\usepackage{hyperref}
+\hypersetup{
+    colorlinks=true,
+    urlcolor=cyan,
+    }
+
+    
+
+\begin{document}
+\noindent VASP to QE table \hfill Andres Covarrubias    \\
+5/23/2022
+
+\hrulefill
+
+
+All VASP objects are sourced from the \href{https://pymatgen.org/pymatgen.io.vasp.html?highlight=io\%20vasp\#module-pymatgen.io.vasp}{pymatgen.io.vasp} package of pymatgen. 
+\begin{center}
+\begin{table}[ht]
+\begin{tabularx}{\linewidth}{|>{\RaggedRight}p{2.5cm}|x|x|}\hline
+ VASP version & Notes & QE Replacement \\ \hline
+ 
+ %%% MPRelaxSet %%%
+ \href{https://pymatgen.org/pymatgen.io.vasp.sets.html?highlight=mprelaxset#pymatgen.io.vasp.sets.MPRelaxSet}{MPRelaxSet} & 
+ %%% Notes %%%
+ Implementation of VaspInputSet utilizing parameters in the public Materials Project. Typically, the pseudopotentials chosen contain more electrons than the MIT parameters, and the k-point grid is ~50\% more dense. The LDAUU parameters are also different due to the different psps used, which result in different fitted values. & 
+ %%% QE Replacement %%%
+ TODO \\ \hline
+ 
+ %%% MPStaticSet %%%
+ \href{https://pymatgen.org/pymatgen.io.vasp.sets.html?highlight=mpstaticset#pymatgen.io.vasp.sets.MPStaticSet}{MPStaticSet} &
+  %%% Notes %%%
+Creates input files for a static calculation. &
+ %%% QE Replacement %%%
+ TODO \\ \hline
+ 
+ %%% MPSOCSet %%%
+ \href{https://pymatgen.org/pymatgen.io.vasp.sets.html?highlight=mpsocset#pymatgen.io.vasp.sets.MPSOCSet}{MPSOCSet} &
+  %%% Notes %%%
+ An input set for running spin-orbit coupling (SOC) calculations. &
+ %%% QE Replacement %%%
+ TODO \\ \hline
+ 
+ %%% Vasprun %%%
+ \href{https://vasprun-xml.readthedocs.io/en/latest/}{Vasprun} &
+  %%% Notes %%%
+ A python project used for quick analysis of VASP calculation solely from vasprun.xml &
+ %%% QE Replacement %%%
+ TODO \\ \hline
+ 
+ %%% Chgcar %%%
+ \href{https://www.vasp.at/wiki/index.php/CHGCAR}{Chgcar} &
+  %%% Notes %%%
+ The CHGCAR file stores the charge density and the PAW one-center occupancies and can be used for restarting VASP calculations &
+ %%% QE Replacement %%%
+ TODO \\ \hline
+ 
+ %%% Oszicar %%%
+ \href{https://www.vasp.at/wiki/index.php/OSZICAR}{Oszicar} &
+  %%% Notes %%%
+ Information about convergence speed and about the current step is written to stdout and to the OSZICAR file. &
+ %%% QE Replacement %%%
+ TODO \\ \hline
+ 
+ %%% Outcar %%%
+ \href{https://www.vasp.at/wiki/index.php/OUTCAR}{Outcar} &
+  %%% Notes %%%
+ The OUTCAR file gives detailed output of a VASP run &
+ %%% QE Replacement %%%
+ TODO \\ \hline
+ 
+ %%% Potcar %%%
+ \href{https://www.vasp.at/wiki/index.php/POTCAR}{Potcar} &
+  %%% Notes %%%
+ The POTCAR file essentially contains the pseudopotential for each atomic species used in the calculation. If the number of species is larger than one, one simply concatenates the POTCAR files of the species. &
+ %%% QE Replacement %%%
+ TODO \\ \hline
+ 
+ %%% KPAR %%%
+ \href{https://www.vasp.at/wiki/index.php/KPAR}{KPAR} &
+  %%% Notes %%%
+ Number of k-points &
+ %%% QE Replacement %%%
+ TODO \\ \hline
+\end{tabularx}
+\end{table}
+\end{center}
+\end{document}
+
+% %%% Template %%%
+%  \href{template.url}{Template} &
+%   %%% Notes %%%
+%  cell8 &
+%  %%% QE Replacement %%%
+%  TODO \\ \hline
