@@ -1,6 +1,8 @@
 \documentclass[12pt]{article}
 \usepackage[margin=1in]{geometry}
 \usepackage[all]{xy}
+
+
 \usepackage{amsmath,amsthm,amssymb,color,latexsym}
 \usepackage{geometry}
 \usepackage{physics}
@@ -78,7 +80,7 @@ A just-in-time (jit) compiler for Python. Works best on code that uses NumPy arr
 Built in module which implements binary protocols for serializing and de-serializing a Python object structure. The first import is \href{https://docs.python.org/3/library/pickle.html?highlight=load#pickle.load}{load} which reads the pickled representation of an object from an open file object and returns the reconstituted object hierarchy specified therein. The second import is \href{https://docs.python.org/3/library/pickle.html?highlight=load#pickle.dump}{dump} which writes the pickled representation of an object to an open file object. 
 
 \section*{Setting parameters and input parsing (Lines 29-93)}
-Input parsing set up to read a set of key-value pairs. 
+Sets up default values for variables usually defined with the input file. Input parsing set up to read a set of key-value pairs from the input file. 
 \section*{Function Definitions (Lines 98-270)}
 \subsection*{Pre-Defined Functions}
 \begin{itemize}
@@ -97,7 +99,7 @@ Input parsing set up to read a set of key-value pairs.
     
     \item \mintinline{Python}{Nfinder(struct_mag,site,d_N,dr)}
     
-    Finds and returns the coordinates of both \mintinline{Python}{site} and all the neighbors within \mintinline{Python}{d_N-dr} and \mintinline{Python}{d_N+dr}
+    Finds and returns the coordinates of both \mintinline{Python}{site} and all the neighbors within \mintinline{Python}{d_N-dr} and \mintinline{Python}{d_N+dr}. Used to find the $N$ nearest neighbors to a site. 
     
     \item \mintinline{Python}{my_kernel(all_coords,coord_N,index)}
     
@@ -113,27 +115,56 @@ Input parsing set up to read a set of key-value pairs.
     
     \item \mintinline{Python}{make_homogenous(lst)}
     
-    Standardizes lists 
+    Standardizes lists, important for neighbor mapping
     \item \mintinline{Python}{tFunc(spin_abs,spin_x,spin_y,spin_z,mags,magsqs,T,J2flag,J3flag,J4flag,J5flag)}
     
-    Monte-Carlo Algorithm w/ JIT compilation
+    Monte-Carlo Algorithm for approximating $T_c$ with JIT compilation
 \end{itemize}
-\section*{Generating magnetic spin configurations (Lines 292-318)}
-\section*{Auxiliary dictionaries (Lines 328-368)}
-\section*{Collinear energy calculation (372-496) }
-\section*{Magnetization calculations / classifications (Lines 498-625)}
-\section*{Non-collinear energy calculations (Lines 628-817) }
-\section*{Hamiltonian Fitting (Lines 820-1219)}
+
+\section*{Generating magnetic spin configurations (Lines 292-318)} %%% Spin Config Generation %%%
+Reads the cell from the given struct and then uses the \mintinline{Python}{MagneticStructureEnumerator} method from Pymatgen to generate symmetry valid spin configurations. These configurations are then screened to see if they are 2D. If only 1 valid configuration is found, the code exits. 
+
+\section*{Auxiliary dictionaries (Lines 328-368)} %%% Aux Dicts %%% 
+
+First there is a list of magnetic elements and their abbreviation on the periodic table. 
+
+Second there is a dictionary with key-value pairs corresponding to specifies the strength of the effective on-site exchange interactions, $J$,  for using the DFT+U approach (LDAUJ). All $J$ values are set to $0$ by default, and is updated here if a value was given in the input file. 
+
+Third there is a dictionary with key-value pairs corresponding to specifies the strength of the effective on-site Coulomb interactions, $U$,  for using the DFT+U approach (LDAUU). Default values where data mined from the Materials Project, but are updated here if a value was given in the input file.
+
+Fourth there is a dictionary with key-value pairs corresponding to specifies the $l$-quantum number for which the on-site interaction is added  for using the DFT+U approach (LDAUL). All $l$ values are set to $2$ by default, and are updated here if a value was given in the input file.
+
+There are three more dictionaries: \pmint{relax_dict}, \pmint{stat_dict}, and \pmint{mae_dict}. These contain key-value pairs for default values needed for DFT calculations in VASP. Additionally, here is where values are changed if the accuracy is set to high. 
+
+\section*{Relaxation DFT Calculations (372-496) } %%% Relax DFT %%%
+
+Calculates that magnetization of a particular structure, then filters out configurations that either are Ferrimagnetic or have uneven spins. Then uses the \pmint{MPRelaxSet} method from Pymatgen to generate input files for VASP. These input files are then submitted to VASP and a relaxation calculation is done. If the calculation doesn't converge, troubleshooting is done automatically for a couple common fixes (change NSIM $\rightarrow$ reducing POTIM $\rightarrow$ increasing  SYMPREC $\rightarrow$ Turning off symmetry)
+
+
+% (change NSIM $\rightarrow$ Linear Mixing $\rightarrow$ increasing  SYMPREC $\rightarrow$ Turning off symmetry)
+
+\section*{Static DFT Calculations (Lines 498-625)} %%% Static DFT %%%
+
+\section*{MAE Calculations (Lines 628-817) } %%% Non-collinear MAE DFT %%%
+
+\section*{Hamiltonian Fitting (Lines 820-1219)} %%% Hamiltonian Fitting %%%
+
 Fits the \href{https://en.wikipedia.org/wiki/Quantum_Heisenberg_model}{Heisenberg Hamiltonian} 
 \begin{align*}
     H &= -\frac{1}{2}\sum_{i,j} J_1\textbf{S}_i\textbf{S}_j-\frac{1}{2}\sum_{i,l} J_2\textbf{S}_i\textbf{S}_l-\frac{1}{2}\sum_{i,m} J_3\textbf{S}_i\textbf{S}_m-\frac{1}{2}\sum_{i,n} J_4\textbf{S}_i\textbf{S}_n \\
     &- \sum_i\Big[ k_xS_{ix}^2 - k_y S_{iy}^2- k_z S_{iz}^2\Big]
 \end{align*}
-\section*{Neighbor Mapping (Lines 1271-1495)}
-\section*{Monte-Carlo Simulation (Lines 1497-1526)}
+ 
+\section*{Neighbor Mapping (Lines 1271-1495)} %%% Neighbor Mapping %%%
+
+\section*{Monte-Carlo Simulation (Lines 1497-1526)} %%% MC calcs %%%
+
 \section*{Personal Notes}
 \begin{itemize}
-    \item Research non-collinear calculations in QE.
     \item Maybe replace instances of range(len()) in function definitions?
+    \item \mintinline{Python}{get_cell_lengths_and_angles()} in line 293 is deprecated and needs to be replaced. See \href{https://wiki.fysik.dtu.dk/ase/releasenotes.html}{here}, suggests replacing with \mintinline{Python}{atoms.cell.cellpar()}
+    \item Figure out how to reuse / replace \pmint{relax_dict}, \pmint{stat_dict}, and \pmint{mae_dict} for building QE input files. 
+    \item See if input VASP files can be converted to QE files at line 410 (post MPRelax calls)
+    \item Need to re-write lines 411-496 to fit with QE file I/O
 \end{itemize}
 \end{document}
