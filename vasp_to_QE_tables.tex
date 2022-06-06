@@ -28,8 +28,8 @@
 
 \hrulefill
 
-
-All VASP objects are sourced from the \href{https://pymatgen.org/pymatgen.io.vasp.html?highlight=io\%20vasp\#module-pymatgen.io.vasp}{pymatgen.io.vasp} package of pymatgen. 
+\section*{VASP Objects}
+All VASP objects are sourced from the \href{https://pymatgen.org/pymatgen.io.vasp.html?highlight=io\%20vasp\#module-pymatgen.io.vasp}{pymatgen.io.vasp} package of pymatgen except for Vasprun, which is a stand alone python project
 \begin{center}
 \begin{table}[ht]
 \begin{tabularx}{\linewidth}{|>{\RaggedRight}p{2.5cm}|x|x|}\hline
@@ -40,61 +40,92 @@ All VASP objects are sourced from the \href{https://pymatgen.org/pymatgen.io.vas
  %%% Notes %%%
  Implementation of VaspInputSet utilizing parameters in the public Materials Project. Typically, the pseudopotentials chosen contain more electrons than the MIT parameters, and the k-point grid is ~50\% more dense. The LDAUU parameters are also different due to the different psps used, which result in different fitted values. & 
  %%% QE Replacement %%%
- TODO \\ \hline
+ \href{https://pymatgen.org/pymatgen.io.pwscf.html}{PWscf} module in pymatgen, where the materials project is added in manually. Look into using \href{https://atomsk.univ-lille.fr/}{Atomsk} or \href{http://openbabel.org/wiki/Main_Page}{OpenBabel} or \href{https://wiki.fysik.dtu.dk/ase/}{ASE} \\ \hline
  
  %%% MPStaticSet %%%
  \href{https://pymatgen.org/pymatgen.io.vasp.sets.html?highlight=mpstaticset#pymatgen.io.vasp.sets.MPStaticSet}{MPStaticSet} &
   %%% Notes %%%
 Creates input files for a static calculation. &
  %%% QE Replacement %%%
- TODO \\ \hline
+ Convert using \href{https://atomsk.univ-lille.fr/}{Atomsk} or \href{http://openbabel.org/wiki/Main_Page}{OpenBabel} or \href{https://wiki.fysik.dtu.dk/ase/}{ASE} \\ \hline
  
  %%% MPSOCSet %%%
  \href{https://pymatgen.org/pymatgen.io.vasp.sets.html?highlight=mpsocset#pymatgen.io.vasp.sets.MPSOCSet}{MPSOCSet} &
   %%% Notes %%%
  An input set for running spin-orbit coupling (SOC) calculations. &
  %%% QE Replacement %%%
- TODO \\ \hline
+ Convert using \href{https://atomsk.univ-lille.fr/}{Atomsk} or \href{http://openbabel.org/wiki/Main_Page}{OpenBabel} or \href{https://wiki.fysik.dtu.dk/ase/}{ASE} \\ \hline
  
  %%% Vasprun %%%
  \href{https://vasprun-xml.readthedocs.io/en/latest/}{Vasprun} &
   %%% Notes %%%
  A python project used for quick analysis of VASP calculation solely from vasprun.xml &
  %%% QE Replacement %%%
- TODO \\ \hline
+ \href{https://github.com/maxhutch/qe-tools/blob/master/README.md}{qe-tools} \\ \hline
  
  %%% Chgcar %%%
  \href{https://www.vasp.at/wiki/index.php/CHGCAR}{Chgcar} &
   %%% Notes %%%
  The CHGCAR file stores the charge density and the PAW one-center occupancies and can be used for restarting VASP calculations &
  %%% QE Replacement %%%
- TODO \\ \hline
+ Convert using \href{https://atomsk.univ-lille.fr/}{Atomsk} or \href{http://openbabel.org/wiki/Main_Page}{OpenBabel} or \href{https://wiki.fysik.dtu.dk/ase/}{ASE} \\ \hline
  
  %%% Oszicar %%%
  \href{https://www.vasp.at/wiki/index.php/OSZICAR}{Oszicar} &
   %%% Notes %%%
  Information about convergence speed and about the current step is written to stdout and to the OSZICAR file. &
  %%% QE Replacement %%%
- TODO \\ \hline
+ Convert using \href{https://atomsk.univ-lille.fr/}{Atomsk} or \href{http://openbabel.org/wiki/Main_Page}{OpenBabel} or \href{https://wiki.fysik.dtu.dk/ase/}{ASE} \\ \hline
  
  %%% Outcar %%%
  \href{https://www.vasp.at/wiki/index.php/OUTCAR}{Outcar} &
   %%% Notes %%%
  The OUTCAR file gives detailed output of a VASP run &
  %%% QE Replacement %%%
- TODO \\ \hline
+ Convert using \href{https://atomsk.univ-lille.fr/}{Atomsk} or \href{http://openbabel.org/wiki/Main_Page}{OpenBabel} or \href{https://wiki.fysik.dtu.dk/ase/}{ASE} \\ \hline
  
  %%% Potcar %%%
  \href{https://www.vasp.at/wiki/index.php/POTCAR}{Potcar} &
   %%% Notes %%%
  The POTCAR file essentially contains the pseudopotential for each atomic species used in the calculation. If the number of species is larger than one, one simply concatenates the POTCAR files of the species. &
  %%% QE Replacement %%%
- TODO \\ \hline
+ Specify paths directory containing Pseudo-potential files  \\ \hline
+\end{tabularx}
+\end{table}
+\end{center}
+
+\section*{Nomenclature}
+\begin{center}
+\begin{table}[ht]
+\begin{tabularx}{\linewidth}{|>{\RaggedRight}p{2.5cm}|x|x|}\hline
+ VASP  & Notes & QE \\ \hline
+ 
  
  %%% KPAR %%%
  \href{https://www.vasp.at/wiki/index.php/KPAR}{KPAR} &
   %%% Notes %%%
  Number of k-points &
+ %%% QE Replacement %%%
+K-points card on PWscf file \\ \hline
+
+%%% NSIM %%%
+ \href{https://www.vasp.at/wiki/index.php/NSIM}{NSIM} &
+  %%% Notes %%%
+ Sets the number of bands that are optimized simultaneously by the RMM-DIIS algorithm. &
+ %%% QE Replacement %%%
+ TODO \\ \hline
+ 
+  %%% POTIM %%%
+ \href{https://www.vasp.at/wiki/index.php/POTIM}{POTIM} &
+  %%% Notes %%%
+ Sets the time step in molecular dynamics or the step width in ionic relaxations. &
+ %%% QE Replacement %%%
+ TODO \\ \hline
+ 
+  %%% SYMPREC %%%
+ \href{https://www.vasp.at/wiki/index.php/SYMPREC}{SYMPREC} &
+  %%% Notes %%%
+ Determines to which accuracy the positions in the POSCAR file must be specified &
  %%% QE Replacement %%%
  TODO \\ \hline
 \end{tabularx}
@@ -105,6 +136,6 @@ Creates input files for a static calculation. &
 % %%% Template %%%
 %  \href{template.url}{Template} &
 %   %%% Notes %%%
-%  cell8 &
+%  notes &
 %  %%% QE Replacement %%%
 %  TODO \\ \hline
