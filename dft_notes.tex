@@ -30,11 +30,10 @@
     \item Uses functionals based on the spatially dependent electron density.
     \item Limited by: Inter-molecular interactions, dispersion (i.e. Van der Waals forces), transition states, and global potential energy surfaces. 
     \item Based on the Hohenberg-Kohn / Kohn-Sham theorems
-    \item Simplest version uses the local density approximation (\href{https://en.wikipedia.org/wiki/Local-density_approximation}{LDA})
     \item Reduces an interacting system to a non-interaction system w/ an effective potential. Makes the system solvable
 \end{itemize}
 
-\section*{Derivation and Formalism} %%% Derivation %%%
+\section{Derivation and Formalism} %%% Derivation %%%
 
 Consider a $N$-body electronic structure under the \href{https://en.wikipedia.org/wiki/Born\%E2\%80\%93Oppenheimer_approximation}{Born-Oppenheimer Approximation} with an static external potential $V$. A stationary electronic state in this system is described by the wavefunction $\boldsymbol{\Psi}(\textbf{r}_1,\cdots,\textbf{r}_N)$ and satisfies the time-independent Sch\"odinger equation
 \begin{equation*}
@@ -54,21 +53,21 @@ The expectation value of an observable $O$ can be also be defined as the functio
 \end{equation*}
 This generalizes naturally to energy levels above the ground state. In particular, the energy can be defined as the functional
 \begin{equation}\label{eq:Enfunc}
-    E[n] = \bra{\boldsymbol{\Psi}[n]}T+V+U\ket{\boldsymbol{\Psi}[n]} = T[n] + U[n] + \int V(\textbf{r})n(\textbf{r})d^3\textbf{r}
+    E[n] = \bra{\boldsymbol{\Psi}[n]}T+V+U\ket{\boldsymbol{\Psi}[n]} = T[n] + U[n] + \int V(\textbf{r})n(\textbf{r})~d^3\textbf{r}
 \end{equation}
 This expression can be minimized using the \href{https://en.wikipedia.org/wiki/Lagrange_multiplier}{Lagrangian Method of Undetermined Multipliers} to yield the ground state energy, and in turn all other ground state observables.
 
-\subsection*{Kohn-Sham Equation} %%% Kohn-Sham Equation %%%
+\subsection{Kohn-Sham Equation} %%% Kohn-Sham Equation %%%
 The Kohn-Sham Equation must be discussed in order to continue the derivation. The Kohn-Sham Equation is the Sch\"odinger equation of a fictitious system of non-interacting particles based on a real system with interactions. The equation is characterized by the Kohn-Sham potential (denoted here as $V_{\mathrm{eff}}$), which is the effective potential that the non-interacting particles move through. The particles in question are normally electrons, and thus the wavefunction can be represented as a \href{https://en.wikipedia.org/wiki/Slater_determinant}{Slater Determinant} constructed from a set of orbitals which are the lowest energy solution to 
 \begin{equation}\label{eq:KSeq}
-    \lrp{-\frac{\hbar^2}{2m}\nabla^2+ V_{\mathrm{eff}}(\textbf{r})}\varphi_i(\textbf{r}) = \varepsilon_i\varphi_i(\textbf{r})
+    \lrp{-\frac{\hbar^2}{2m}\nabla^2+ V_{\mathrm{eff}}(\textbf{r})}\psi_i(\textbf{r}) = \varepsilon_i\psi_i(\textbf{r})
 \end{equation}
-This is a typical representation of the Kohn-Sham Equations, where $\varepsilon_i$ is the energy corresponding to the orbital $\varphi_i(\textbf{r})$. With this, the density of the system can be defined as 
+This is a typical representation of the Kohn-Sham Equations, where $\varepsilon_i$ is the energy corresponding to the Kohn-Sham orbital $\psi_i(\textbf{r})$. With this, the density of the system can be defined as 
 \begin{equation*}
-    n(\textbf{r}) = \sum_i^N |\varphi_i(\textbf{r})|^2
+    n(\textbf{r}) = \sum_i^N |\psi_i(\textbf{r})|^2
 \end{equation*}
 
-\subsection*{Effective Potential} %%% Effective Potential %%%
+\subsection{Effective Potential} %%% Effective Potential %%%
 Returning to the initial derivation, one considers the energy functional that does not explicitly depend on the interaction energy 
 \begin{equation}\label{eq:KSpot}
     E_s[n] = \bra{\boldsymbol{\Psi}_s[n]}T+V_{\mathrm{eff}}(\textbf{r})\ket{\boldsymbol{\Psi}_s[n]} 
@@ -77,8 +76,9 @@ where the effective potential is defined as
 \begin{equation}\label{eq:Veff}
     V_{\mathrm{eff}}(\textbf{r}) \equiv V(\textbf{r}) + \int \frac{n(\textbf{r}')}{|\textbf{r}-\textbf{r}'|}d^3\textbf{r}' + V_{XC}[n(\textbf{r})]
 \end{equation}
-Here $V(\textbf{r})$ is the external potential, the second term is the Hartree term describing the electron-electron Coulomb interaction, and $V_{XC}[n(\textbf{r})]$ is the exchange–correlation potential. Comparing \ref{eq:Enfunc} and \ref{eq:KSpot}, it is clear that the interaction term is ``absorbed" into the effective potential. With this definition, the initial many body problem with interactions to a single body problem with no interactions. The difficulty in solving this problem arises in the last term $V_{XC}[n(\textbf{r})]$. Solving for this term involves knowing $n(\textbf{r})$, which in turn needs knowledge of the orbitals $\varphi_i(\textbf{r})$ in \ref{eq:KSeq}, which in turn needs knowledge of $V_{XC}[n(\textbf{r})]$ through \ref{eq:Veff}. Thus in order to solve the Kohn-Sham equation, $n(\textbf{r})$, $\varphi_i(\textbf{r})$, and $V_{XC}[n(\textbf{r})]$ need to be found such that they are self-consistent. This is achieved usually by starting with an initial guess for $n(\textbf{r})$, then iterating through the dependency chain until convergence is achieved. 
-\subsection*{Approximations}
+Here $V(\textbf{r})$ is the external potential, the second term is the Hartree term describing the electron-electron Coulomb interaction, and $V_{XC}[n(\textbf{r})]$ is the exchange–correlation potential. Comparing \eqref{eq:Enfunc} and \eqref{eq:KSpot}, it is clear that the interaction term is ``absorbed" into the effective potential. With this definition, the initial many body problem with interactions to a single body problem with no interactions. The difficulty in solving this problem arises in the last term $V_{XC}[n(\textbf{r})]$. Solving for this term involves knowing $n(\textbf{r})$, which in turn needs knowledge of the orbitals $\psi_i(\textbf{r})$ in \eqref{eq:KSeq}, which in turn needs knowledge of $V_{XC}[n(\textbf{r})]$ through \eqref{eq:Veff}. Thus in order to solve the Kohn-Sham equation, $n(\textbf{r})$, $\psi_i(\textbf{r})$, and $V_{XC}[n(\textbf{r})]$ need to be found such that they are self-consistent. This is achieved usually by starting with an initial guess for $n(\textbf{r})$, then iterating through the dependency chain until convergence is achieved. 
+
+\subsection{Approximations} %%% Approximations %%%
 The biggest issue with DFT is that exact functionals for the exchange and correlation are only known for the free electron gas. However, this issue can be solved to high accuracy using approximations. 
 
 
@@ -90,4 +90,17 @@ The LDA assumes that the density is the same everywhere. Because of this, the LD
 \begin{equation*}
     E_{XC}^{\mathrm{GGA}}[n_{\uparrow},n_{\downarrow}]\int \varepsilon_{XC}(n_{\uparrow},n_{\downarrow},\nabla n_{\uparrow},\nabla n_{\downarrow})n(\textbf{r})d\textbf{r}
 \end{equation*}
+
+\section{DFT $+$ U} %%% DFT + U %%%
+
+Even with the approximations above for the XC functionals, the formalism provided for DFT still produces non-physical results for strongly correlated systems such as Mott insulators. Both LDA and GGA have significant error in predicting the insulating character of Mott insulators, and provide a poor representation of their physical properties.  In general, these problems originate from the tendency of most approximate XC functionals to over-delocalize valence electrons and over-stabilize metallic ground states. The simplest models to overcome this deficiency is the Hubbard model; when incorporated into DFT it is denoted by ``$+U$" where $U$ is the Hubbard correction.
+
+\subsection{Hubbard Model} %%% Hubbard Model %%%
+The \href{https://en.wikipedia.org/wiki/Hubbard_model}{Hubbard Model} is used to describe interacting electrons moving about a set $\Lambda$ of spatially localized orbitals. The motion of the electrons is often refered to as ``hopping", where a strongly localized electron moves from one atomic site to one of its neighbors. The Hamiltonian\footnote{The notation $\sum_{\langle i,j\in \Lambda\rangle}$ implies that the sum is restricted to nearest-neighbor sites.} for this model can be written in the language of second quantization as 
+\begin{equation}\label{eq:HubHam}
+    H = -t\sum_{\langle i,j\in \Lambda\rangle}\sum_{\sigma}\lrp{c^{\dagger}_{i\sigma}c_{j\sigma}+c^{\dagger}_{j\sigma}c_{i\sigma}}+U\sum_{i\in \Lambda}c^{\dagger}_{i\uparrow}c^{\dagger}_{i\downarrow}c_{i\downarrow}c_{i\uparrow}
+\end{equation}
+$c^{\dagger}$ and $c$ represent the fermionic creation and and annihilation operators respectively, $t$ is the hopping amplitude, and $U$ encodes the on-site Coulomb repulsion. $t$ and $U$ represent the minimal set of parameters necessary to describe the physics of strongly correlated systems. Note that without the second term,  \eqref{eq:HubHam} reduces to the \href{https://en.wikipedia.org/wiki/Tight_binding}{Tight Binding Model}. The consequence of including the second term is a more realistic model that predicts a transition from conductor to insulator based on the ratio $\nicefrac{U}{t}$. For example, the limit of $1\ll \nicefrac{U}{t}$ describes an insulating system as electrons will not have enough energy to overcome the repulsion of neighboring electrons (this is the case for Mott insulators). 
+
+\subsection{Formulation}
 \end{document}
