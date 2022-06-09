@@ -151,12 +151,18 @@ Calculates that magnetization of a particular structure, then filters out config
 
 Fits the \href{https://en.wikipedia.org/wiki/Quantum_Heisenberg_model}{Heisenberg Hamiltonian} 
 \begin{align*}
-    H &= -\frac{1}{2}\sum_{i,j} J_1\textbf{S}_i\textbf{S}_j-\frac{1}{2}\sum_{i,l} J_2\textbf{S}_i\textbf{S}_l-\frac{1}{2}\sum_{i,m} J_3\textbf{S}_i\textbf{S}_m-\frac{1}{2}\sum_{i,n} J_4\textbf{S}_i\textbf{S}_n \\
+    H &= -\frac{1}{2}\sum_{\langle i,j\rangle } J_1\textbf{S}_i\textbf{S}_j-\frac{1}{2}\sum_{\langle i,l\rangle} J_2\textbf{S}_i\textbf{S}_l-\frac{1}{2}\sum_{\langle i,m\rangle} J_3\textbf{S}_i\textbf{S}_m-\frac{1}{2}\sum_{\langle i,n\rangle} J_4\textbf{S}_i\textbf{S}_n \\
     &- \sum_i\Big[ k_xS_{ix}^2 - k_y S_{iy}^2- k_z S_{iz}^2\Big]
 \end{align*}
  
 \section*{Neighbor Mapping (Lines 1271-1495)} %%% Neighbor Mapping %%%
+Begins by checking if an input file for the MC simulation was included in the directory. If the file already exists, the previously calculated neighbors lists are unpickled and the following steps are skipped. 
 
+If not, the code will write an input file for the MC simulation with the coupling constants, EMA, MAE values, start and end temps, and magnetic moment per atom. Then proceeds to parse the input file and create a new directory to hold the data from the MC calculation. Proceeds to call \pmint{CollinearMagneticStructureAnalyzer} and creates a $50 \times 50 \times 1$ super cell where only the magnetic atoms of the structure are present. Next, the code records the Cartesian coordinates of each of the sites in the structure, casts the list into a numPY array, then flattens the array. Lastly, creates 5 dummy lists of lists for each of the nearest neighbor sites. 
+
+Checks if \pmint{GPU_accel} is enabled, and uses the appropriate \pmint{Nfinder}. Note that if \pmint{GPU_accel} is not enabled, the mapping will be done sequentially rather than in parallel, which has the potential to be significantly slower. 
+
+Lastly the neighbor mapping is done. There is a for loop which iterates over the elements of the dummy lists, and overwrites the entries with calls to the appropriate \pmint{Nfinder}. The amount of lists iterated over corresponds to the number of coupling constants which were found in the Hamiltonian fitting. If \pmint{more_than_2_metal_layers} is set to true in the input file, then the code proceeds to call \pmint{make_homogeneous} on each of the lists. Finally the code pickles the lists for future use. 
 \section*{Monte-Carlo Simulation (Lines 1497-1526)} %%% MC calcs %%%
 
 \section*{Personal Notes}
