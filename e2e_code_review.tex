@@ -118,7 +118,7 @@ Sets up default values for variables usually defined with the input file. Input 
     Standardizes lists, important for neighbor mapping
     \item \mintinline{Python}{tFunc(spin_abs,spin_x,spin_y,spin_z,mags,magsqs,T,J2flag,J3flag,J4flag,J5flag)}
     
-    Monte-Carlo Algorithm for approximating $T_c$ with JIT compilation
+    Monte-Carlo Algorithm for approximating $T_c$ with JIT compilation. See section on monte-carlo simulation for more details. 
 \end{itemize}
 
 \section*{Generating magnetic spin configurations (Lines 292-318)} %%% Spin Config Generation %%%
@@ -163,7 +163,18 @@ If not, the code will write an input file for the MC simulation with the couplin
 Checks if \pmint{GPU_accel} is enabled, and uses the appropriate \pmint{Nfinder}. Note that if \pmint{GPU_accel} is not enabled, the mapping will be done sequentially rather than in parallel, which has the potential to be significantly slower. 
 
 Lastly the neighbor mapping is done. There is a for loop which iterates over the elements of the dummy lists, and overwrites the entries with calls to the appropriate \pmint{Nfinder}. The amount of lists iterated over corresponds to the number of coupling constants which were found in the Hamiltonian fitting. If \pmint{more_than_2_metal_layers} is set to true in the input file, then the code proceeds to call \pmint{make_homogeneous} on each of the lists. Finally the code pickles the lists for future use. 
+
+
 \section*{Monte-Carlo Simulation (Lines 1497-1526)} %%% MC calcs %%%
+First creates a range of temperatures as defined in the input MC file written in the neighbor mapping section. For each temperature in that range, the following monte-carlo simulation takes place. Dummy arrays are created for the spin in each Cartesian direction, the absolute spin, the magnetization, and the magnetic susceptibility. Then calls \pmint{tFunc}
+\subsection*{tFunc}
+Picks a random site from the list of nearest neighbor sites, and records the spin of that site. Then rotates the spin by two random angles and records the spin. Then calculates the energy difference of the system before and after the spin was rotated. If the energy of the system decreased, the new spin is kept. If the energy of the system increases or stays the same, then another random number, $\mathrm{samp}$, is generated. If $\mathrm{samp}$ satisfies
+\begin{equation*}
+    \mathrm{samp} \leq e^{-\nicefrac{\Delta E}{k_B T}}
+\end{equation*}
+then the spin is still updated. If not, then nothing happens, and another spin is chosen randomly. This process continues for $10^4$ steps, then an additional loop is added to calculate the magnetism and magnetic susceptibility of the system. For each step until $10^5$ steps are taken, these values are calculated and recorded. The function finally returns the average of both calculated values. 
+
+Once the \pmint{tFunc} call finishes the temperature, magnetization, and magnetic susceptibility are printed and logged. Analysing this for all temperatures will divulge the Curie Temperature. 
 
 \section*{Personal Notes}
 \begin{itemize}
