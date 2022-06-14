@@ -19,6 +19,8 @@
     colorlinks=true,
     urlcolor=cyan,
     }
+\usepackage{biblatex}
+\addbibresource{dft.bib}
 
 \begin{document}
 \noindent DFT Notes \hfill Andres Covarrubias    \\
@@ -84,16 +86,20 @@ The biggest issue with DFT is that exact functionals for the exchange and correl
 
 The simplest approximation of the exchange-correlation energy functional is the Local Density Approximation (LDA), which soley depends on the value of the electronic density at each point in space. For a general spin-unpolarized system, LDA can be written as 
 \begin{equation*}
-    E_{XC}^{\mathrm{LDA}}[n] \equiv \int \varepsilon_{XC}(n)n(\textbf{r})d\textbf{r}
+    E_{XC}^{\mathrm{LDA}}[n] = \int \varepsilon_{XC}(n)n(\textbf{r})d\textbf{r}
 \end{equation*}
 The LDA assumes that the density is the same everywhere. Because of this, the LDA has a tendency to underestimate the exchange energy and over-estimate the correlation energy. To correct for this tendency, it is common to expand in terms of the gradient of the density in order to account for the non-homogeneity of the true electron density. These expansions are referred to as generalized gradient approximations (GGA) and have the following form:
-\begin{equation*}
-    E_{XC}^{\mathrm{GGA}}[n_{\uparrow},n_{\downarrow}]\int \varepsilon_{XC}(n_{\uparrow},n_{\downarrow},\nabla n_{\uparrow},\nabla n_{\downarrow})n(\textbf{r})d\textbf{r}
-\end{equation*}
-
+\begin{equation}\label{eq:GGAfunc}
+    E_{XC}^{\mathrm{GGA}}[n_{\uparrow},n_{\downarrow}] = \int \varepsilon_{XC}(n_{\uparrow},n_{\downarrow},\nabla n_{\uparrow},\nabla n_{\downarrow})n(\textbf{r})d\textbf{r}
+\end{equation}
+While the GGA approximation improves greatly on LDA, it is also limited by the assumptions in its derivation. One such limitation is that the semilocal for of \eqref{eq:GGAfunc} is too restrictive to reproduce all behaviors of an exact functional \cite{PBE2}. Ref. \cite{PBE} improves upon this by writing the energy functional as 
+\begin{equation}\label{eq:PBEfunc}
+    E^{PBE}_{XC}[n_{\uparrow},n_{\downarrow}] = \int n(\textbf{r})\varepsilon(n(\textbf{r}))F_{XC}(r_s,\zeta,s) d\textbf{r}
+\end{equation}
+where $r_s$ is the \href{https://en.wikipedia.org/wiki/Wigner\%E2\%80\%93Seitz_radius}{Seitz radius}, $\zeta$ is the relative spin polarization, $s$ is a dimensionless density gradient, and $F_{XC}$ is the enchancement factor as defined in \cite{PBEfxc}. This final approximation (refered to as PBE after the authors of \cite{PBE}) has proven to be accurate for a large scope of problems in DFT. 
 \section{DFT + U} %%% DFT + U %%%
 
-Even with the approximations above for the XC functionals, the formalism provided for DFT still produces non-physical results for strongly correlated systems such as Mott insulators. Both LDA and GGA have significant error in predicting the insulating character of Mott insulators, and provide a poor representation of their physical properties.  In general, these problems originate from the tendency of most approximate XC functionals to over-delocalize valence electrons and over-stabilize metallic ground states. The simplest models to overcome this deficiency is the Hubbard model; when incorporated into DFT it is denoted by ``$+U$" where $U$ is the Hubbard correction.
+Even with the approximations above for the XC functionals, the standard formalism provided for DFT still produces non-physical results for strongly correlated systems such as Mott insulators \cite{DFT+Ubook}. Both LDA and GGA have significant error in predicting the insulating character of Mott insulators, and provide a poor representation of their physical properties.  In general, these problems originate from the tendency of most approximate XC functionals to over-delocalize valence electrons and over-stabilize metallic ground states. The simplest models to overcome this deficiency is the Hubbard model; when incorporated into DFT it is denoted by ``$+U$" where $U$ is the Hubbard correction.
 
 \subsection{Hubbard Model} %%% Hubbard Model %%%
 The \href{https://en.wikipedia.org/wiki/Hubbard_model}{Hubbard Model} is used to describe interacting electrons moving about a set $\Lambda$ of spatially localized orbitals. The motion of the electrons is often refered to as ``hopping", where a strongly localized electron moves from one atomic site to one of its neighbors. The Hamiltonian\footnote{The notation $\sum_{\langle i,j\in \Lambda\rangle}$ implies that the sum is restricted to nearest-neighbor sites.} for this model can be written in the language of second quantization as 
@@ -113,15 +119,19 @@ It is important to stress that the Hubbard correction should only be applied to 
 \begin{equation}\label{eq:nHub}
     n^{I\sigma}_{mm'} \equiv \sum_{k,v}f^\sigma_{kv}\bra{\psi^\sigma_{kv}}\ket{\phi^I_{m'}}\bra{\phi^I_{m}}\ket{\psi^\sigma_{kv}}
 \end{equation}
-where $f^\sigma_{kv}$ is the Fermi-Dirac occupations of the Kohn-Sham orbitals $\psi^\sigma_{kv}$, and $k$ and $v$ refer to the k-point and band indexes respectively. Using the occupation as defined in \eqref{eq:nHub} and in turn \eqref{eq:Edft+u} amounts to replacing the number operators in \eqref{eq:HubHam} with their mean field average. While this choice of localized basis will be used for the rest of the formulation presented here, it is not unique.Some other popular choices include atomic orbitals and maximally localized Wannier functions, and all come with implementation specific pros and cons. 
+where $f^\sigma_{kv}$ is the Fermi-Dirac occupations of the Kohn-Sham orbitals $\psi^\sigma_{kv}$, and $k$ and $v$ refer to the k-point and band indexes respectively. Using the occupation as defined in \eqref{eq:nHub} and in turn \eqref{eq:Edft+u} amounts to replacing the number operators in \eqref{eq:HubHam} with their mean field average. While this choice of localized basis will be used for the rest of the formulation presented here, it is not unique. Some other popular choices include atomic orbitals and maximally localized Wannier functions, and all come with implementation specific pros and cons. 
 
-With this consideration, \eqref{eq:Edft+u} can be written as 
+With these considerations, Ref. \cite{OGDFT+U} proceeds by writing the energy functional as 
 \begin{equation}
     E = E_{DFT} + \sum_I \lrb{\frac{U^I}{2}\sum_{m,\sigma\neq m',\sigma'}n_{m}^{I\sigma}n^{I\sigma'}_{m'}-\frac{U^I}{2}n^I(n^I-1)}
 \end{equation}
-where $m$ indexes the localized states of the atomic site $I$, $n_{m}^{I\sigma} = n_{mm}^{I\sigma}$ and $n^I = \sum_{m,\sigma}n_{m}^{I\sigma}$. Using \eqref{eq:nHub}, the action of the Hubbard corrective potential can be defined as 
+where $m$ indexes the localized states of the atomic site $I$, $n_{m}^{I\sigma} = n_{mm}^{I\sigma}$ and $n^I = \sum_{m,\sigma}n_{m}^{I\sigma}$. Using \eqref{eq:nHub}, the action of the Hubbard corrective potential\footnote{Further generalized in \cite{DFT+Uformulation} and \cite{Duradev}} can be defined as 
 \begin{equation}
     V\ket{\psi^\sigma_{kv}} = V_{DFT}\ket{\psi^\sigma_{kv}} + \sum_{I,m}U^I\lrp{\frac{1}{2}-n^{I\sigma}_m}\ket{\phi^I_{m}}\bra{\phi^I_{m}}\ket{\psi^\sigma_{kv}}
 \end{equation}
-This equation indicates that the Hubbard potential is repulsive for orbitals that are less than half filled ($n_m^{I\sigma}<\nicefrac{1}{2}$) and attractive for others. This gives a measure of the energy gap between the eigenvalues of occupied and unoccupied states (of order $U$). Thus for strongly correlated systems, the explicit account of on-site electron-electron interactions favors electronic localization and may lead to a band gap in the Kohn-Sham spectrum. 
+This equation indicates that the Hubbard potential is repulsive for orbitals that are less than half filled ($n_m^{I\sigma}<\nicefrac{1}{2}$) and attractive for others. This gives a measure of the energy gap between the eigenvalues of occupied and unoccupied states (of order $U$). Thus for strongly correlated systems, the explicit account of on-site electron-electron interactions favors electronic localization and may lead to a band gap in the Kohn-Sham spectrum.
+
+\printbibliography[
+title={Bibliography}
+]
 \end{document}
