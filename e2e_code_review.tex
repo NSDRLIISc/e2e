@@ -17,6 +17,7 @@
 \hypersetup{
     colorlinks=true,
     urlcolor=cyan,
+    linkcolor=blue,
     }
 
 \begin{document}
@@ -24,6 +25,9 @@
 5/17/22
 
 \hrulefill
+\tableofcontents
+\newpage
+\addcontentsline{toc}{section}{Imports}
 \section*{Imports (Lines 1-22)}
 \subsection*{\href{https://pymatgen.org/}{pymatgen}}
 A robust, open-source Python library for materials analysis.
@@ -79,8 +83,11 @@ A just-in-time (jit) compiler for Python. Works best on code that uses NumPy arr
 \subsection*{\href{https://docs.python.org/3/library/pickle.html}{pickle}}
 Built in module which implements binary protocols for serializing and de-serializing a Python object structure. The first import is \href{https://docs.python.org/3/library/pickle.html?highlight=load#pickle.load}{load} which reads the pickled representation of an object from an open file object and returns the reconstituted object hierarchy specified therein. The second import is \href{https://docs.python.org/3/library/pickle.html?highlight=load#pickle.dump}{dump} which writes the pickled representation of an object to an open file object. 
 
+\addcontentsline{toc}{section}{Setting parameters and input parsing}
 \section*{Setting parameters and input parsing (Lines 29-93)}
 Sets up default values for variables usually defined with the input file. Input parsing set up to read a set of key-value pairs from the input file. 
+
+\addcontentsline{toc}{section}{Function Definitions}
 \section*{Function Definitions (Lines 98-270)}
 \subsection*{Pre-Defined Functions}
 \begin{itemize}
@@ -118,12 +125,14 @@ Sets up default values for variables usually defined with the input file. Input 
     Standardizes lists, important for neighbor mapping
     \item \mintinline{Python}{tFunc(spin_abs,spin_x,spin_y,spin_z,mags,magsqs,T,J2flag,J3flag,J4flag,J5flag)}
     
-    Monte-Carlo Algorithm for approximating $T_c$ with JIT compilation. See section on monte-carlo simulation for more details. 
+    Monte-Carlo Algorithm for approximating $T_c$ with JIT compilation. See section on \hyperref[sec:tFunc]{Monte-Carlo Simulation} for more detail. 
 \end{itemize}
 
-\section*{Generating magnetic spin configurations (Lines 292-318)} %%% Spin Config Generation %%%
+\addcontentsline{toc}{section}{Generating spin configurations}
+\section*{Generating spin configurations (Lines 292-318)} %%% Spin Config Generation %%%
 Reads the cell from the given struct and then uses the \mintinline{Python}{MagneticStructureEnumerator} method from Pymatgen to generate symmetry valid spin configurations. These configurations are then screened to see if they are 2D. If only 1 valid configuration is found, the code exits. 
 
+\addcontentsline{toc}{section}{Auxiliary dictionaries}
 \section*{Auxiliary dictionaries (Lines 328-368)} %%% Aux Dicts %%% 
 
 First there is a list of magnetic elements and their abbreviation on the periodic table. 
@@ -136,25 +145,44 @@ Fourth there is a dictionary with key-value pairs corresponding to specifies the
 
 There are three more dictionaries: \pmint{relax_dict}, \pmint{stat_dict}, and \pmint{mae_dict}. These contain key-value pairs for default values needed for DFT calculations in VASP. Additionally, here is where values are changed if the accuracy is set to high. 
 
+\addcontentsline{toc}{section}{Relaxation DFT Calculations}
 \section*{Relaxation DFT Calculations (372-496) } %%% Relax DFT %%%
 
 Calculates that magnetization of a particular structure, then filters out configurations that either are Ferrimagnetic or have uneven spins. Then uses the \pmint{MPRelaxSet} method from Pymatgen to generate input files for VASP. These input files are then submitted to VASP and a relaxation calculation is done. If the calculation doesn't converge, troubleshooting is done automatically for a couple common fixes (change NSIM $\rightarrow$ reducing POTIM $\rightarrow$ increasing  SYMPREC $\rightarrow$ Turning off symmetry)
 
-
-% (change NSIM $\rightarrow$ Linear Mixing $\rightarrow$ increasing  SYMPREC $\rightarrow$ Turning off symmetry)
-
+\addcontentsline{toc}{section}{Static DFT Calculations}
 \section*{Static DFT Calculations (Lines 498-625)} %%% Static DFT %%%
+The code then proceeds to preform static DFT calculations by calling \pmint{MPStaticSet} for the configuration being studied. If the calculation doesn't converge, then troubleshooting is done automatically for a couple common fixes (change NSIM $\rightarrow$ Linear Mixing $\rightarrow$ increasing  SYMPREC $\rightarrow$ Turning off symmetry). If the calculation does converge, then the energy of the configuration is parsed from the DFT calculation and stored to a variable. The code will then calculate the magnetization from the oszicar and classify magnetization of the configuration. 
 
+\addcontentsline{toc}{section}{MAE Calculations}
 \section*{MAE Calculations (Lines 628-817) } %%% Non-collinear MAE DFT %%%
+First calls \pmint{MPStaticSet} to write the input file for the calculation. Then checks if a collinear WAVECAR and CHGCAR exsists. Then procededs to preform collinear energy calculations with automated troubleshooting (change NSIM $\rightarrow$ Linear Mixing) until convergence has been achieved. 
 
+Next the code calls \pmint{MPSOCSet} and preforms SOC calculatios with automated troubleshooting (change NSIM $\rightarrow$ Linear Mixing) until convergence has been achieved. 
+
+\addcontentsline{toc}{section}{Hamiltonian Fitting}
 \section*{Hamiltonian Fitting (Lines 820-1219)} %%% Hamiltonian Fitting %%%
-
-Fits the \href{https://en.wikipedia.org/wiki/Quantum_Heisenberg_model}{Heisenberg Hamiltonian} 
+Sets the coupling constants and energy to symbols using sympy, and defines Boltzman's constant. Defines the number of neighbors to be considered in the Hamiltonian fitting as \pmint{num_neigh = min([max_neigh,num_valid_configs])}. Then sets up a for loop which iterates over all valid configurations. Within the for loop:
+\begin{enumerate}
+    \item Calculates the magnetization of a configuration by adding up the spins of magnetic materials. If the configuration has uneven spins or is ferrimagnetic, the configuration is discarded. 
+    \item Preforms a static energy calculation and stores the energy in a variable.
+    \item Stores the energy, structure, and path to the static energy calc directory in a list named \pmint{semifinal_list}
+    \item Sorts \pmint{semifinal_list} after the loop finishes
+\end{enumerate}
+The begins a loop \pmint{while num_neigh<=2} and sets \pmint{final_list} to match the number of neighbors to be studied. Then begins a for loop to iterate over the number of configurations to be studied. Within the for loop:
+\begin{enumerate}
+    \item Stores the path, energy, and structure in variables
+    \item Checks if appropriate file for bader.dat analysis. If it exsists then it will load the data from the file, and if not it will preform the analysis and write the bader.dat file. 
+    \item Load data from the bader.dat file to the variable \pmint{magmom_FM}
+\end{enumerate}
+Loads data from the OSZICAR and OUTCAR to check if the file isn't FM or AFM. Creates empty lists for storing information about magnetic atomic sites, magnetic moments, and magnetization as calculated in the OUTCAR. Then iterates over the atomic sites in the structure, calculating and recording said information. Then calls \pmint{Nfinder} and finds the nearest neighbors corresponding to \pmint{num_struct} being considered. Then constructs various \href{https://en.wikipedia.org/wiki/Quantum_Heisenberg_model}{Heisenberg Hamiltonians} for the configurations which follow the form
 \begin{align*}
     H &= -\frac{1}{2}\sum_{\langle i,j\rangle } J_1\textbf{S}_i\textbf{S}_j-\frac{1}{2}\sum_{\langle i,l\rangle} J_2\textbf{S}_i\textbf{S}_l-\frac{1}{2}\sum_{\langle i,m\rangle} J_3\textbf{S}_i\textbf{S}_m-\frac{1}{2}\sum_{\langle i,n\rangle} J_4\textbf{S}_i\textbf{S}_n \\
     &- \sum_i\Big[ k_xS_{ix}^2 - k_y S_{iy}^2- k_z S_{iz}^2\Big]
 \end{align*}
- 
+Calls \href{https://docs.sympy.org/latest/modules/solvers/solveset.html#sympy.solvers.solveset.linsolve}{linsolve} to fit the calculated Hamiltonian to solve for the coupling constants. If no solution is found, the Hamiltonian is altered automatically, reducing the number of neighbors considered. This is repeated until a solution is found. The solutions for the coupling constants are then stored in variables for future calculations. 
+
+\addcontentsline{toc}{section}{Neighbor Mapping}
 \section*{Neighbor Mapping (Lines 1271-1495)} %%% Neighbor Mapping %%%
 Begins by checking if an input file for the MC simulation was included in the directory. If the file already exists, the previously calculated neighbors lists are unpickled and the following steps are skipped. 
 
@@ -164,18 +192,17 @@ Checks if \pmint{GPU_accel} is enabled, and uses the appropriate \pmint{Nfinder}
 
 Lastly the neighbor mapping is done. There is a for loop which iterates over the elements of the dummy lists, and overwrites the entries with calls to the appropriate \pmint{Nfinder}. The amount of lists iterated over corresponds to the number of coupling constants which were found in the Hamiltonian fitting. If \pmint{more_than_2_metal_layers} is set to true in the input file, then the code proceeds to call \pmint{make_homogeneous} on each of the lists. Finally the code pickles the lists for future use. 
 
-
+\addcontentsline{toc}{section}{Monte-Carlo Simulation}
 \section*{Monte-Carlo Simulation (Lines 1497-1526)} %%% MC calcs %%%
-First creates a range of temperatures as defined in the input MC file written in the neighbor mapping section. For each temperature in that range, the following monte-carlo simulation takes place. Dummy arrays are created for the spin in each Cartesian direction, the absolute spin, the magnetization, and the magnetic susceptibility. Then calls \pmint{tFunc}
-\subsection*{tFunc}
-Picks a random site from the list of nearest neighbor sites, and records the spin of that site. Then rotates the spin by two random angles and records the spin. Then calculates the energy difference of the system before and after the spin was rotated. If the energy of the system decreased, the new spin is kept. If the energy of the system increases or stays the same, then another random number, $\mathrm{samp}$, is generated. If $\mathrm{samp}$ satisfies
+First creates a range of temperatures as defined in the input MC file written in the neighbor mapping section. For each temperature in that range, the following monte-carlo simulation takes place. Dummy arrays are created for the spin in each Cartesian direction, the absolute spin, the magnetization, and the magnetic susceptibility. Then calls \pmint{tFunc} to initiate the monte-carlo simulation. Once the \pmint{tFunc} call finishes the temperature, magnetization, and magnetic susceptibility are printed and logged. Analysing this for all temperatures will divulge the Curie Temperature. 
+\subsection*{tFunc}\label{sec:tFunc}
+Picks a random site from the list of nearest neighbor sites, and records the spin of that site. Then rotates the spin by two random angles and records the spin. Then calculates the energy difference of the system before and after the spin was rotated. If the energy of the system decreased, the new spin is kept. If the energy of the system increases or stays the same, then another random number, $samp$, is generated. If $samp$ satisfies
 \begin{equation*}
-    \mathrm{samp} \leq e^{-\nicefrac{\Delta E}{k_B T}}
+    samp \leq e^{-\nicefrac{\Delta E}{k_B T}}
 \end{equation*}
-then the spin is still updated. If not, then nothing happens, and another spin is chosen randomly. This process continues for $10^4$ steps, then an additional loop is added to calculate the magnetism and magnetic susceptibility of the system. For each step until $10^5$ steps are taken, these values are calculated and recorded. The function finally returns the average of both calculated values. 
+then the spin is still updated. If not, then nothing happens, and another spin is chosen randomly. This process continues for $10^4$ steps, allowing the system to reach equilibrium. Af an additional loop is added to calculate the magnetism and magnetic susceptibility of the system. For each step until $10^5$ steps are taken, these values are calculated and recorded. The function finally returns the average of both calculated values. 
 
-Once the \pmint{tFunc} call finishes the temperature, magnetization, and magnetic susceptibility are printed and logged. Analysing this for all temperatures will divulge the Curie Temperature. 
-
+\addcontentsline{toc}{section}{Personal Notes}
 \section*{Personal Notes}
 \begin{itemize}
     \item Maybe replace instances of range(len()) in function definitions?
@@ -183,5 +210,7 @@ Once the \pmint{tFunc} call finishes the temperature, magnetization, and magneti
     \item Figure out how to reuse / replace \pmint{relax_dict}, \pmint{stat_dict}, and \pmint{mae_dict} for building QE input files. 
     \item See if input VASP files can be converted to QE files at line 410 (post MPRelax calls)
     \item Need to re-write lines 411-496 to fit with QE file I/O
+    \item Write code for auto calculating $T_c$ from the MC calcs
+    \item In lines 968 - 992, could add code to automatically compared magmoms from pymatgen calculation and DFT calculation. 
 \end{itemize}
 \end{document}
