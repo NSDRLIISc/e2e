@@ -18,8 +18,10 @@
 \usepackage{hyperref}
 \hypersetup{
     colorlinks=true,
+    linkcolor=blue,
     citecolor=blue,
     urlcolor=cyan,
+    pdfpagemode=FullScreen,
     }
 \usepackage[
     backend=biber, 
@@ -36,8 +38,11 @@
 6/1/22
 
 \hrulefill
-\section*{\href{https://en.wikipedia.org/wiki/Density_functional_theory}{Density Functional Theory}} %%% Overview %%%
+\tableofcontents
+\newpage
+\section{Density Functional Theory} %%% Overview %%%
 \begin{itemize}
+    \item \href{https://en.wikipedia.org/wiki/Density_functional_theory}{Density Functional Theory} is often abbreviated to DFT
     \item Based on functionals of the spatially dependent electron density.
     \item Limited by: Inter-molecular interactions, dispersion (i.e. Van der Waals forces), transition states, and global potential energy surfaces. 
     \item Based on the Hohenberg-Kohn Theorems \cite{HKt1}:
@@ -48,13 +53,13 @@
     \item Further generalized by Kohn-Sham \cite{KSeq} by reducing an interacting system to a non-interaction system with an effective potential, making the system solvable numerically. 
 \end{itemize}
 
-\section{Derivation and Formalism} %%% Derivation %%%
+\subsection{Formalism} %%% Derivation %%%
 
 Consider a $N$-body electronic structure under the \href{https://en.wikipedia.org/wiki/Born\%E2\%80\%93Oppenheimer_approximation}{Born-Oppenheimer Approximation} with an static external potential $V$. A stationary electronic state in this system is described by the wavefunction $\boldsymbol{\Psi}(\textbf{r}_1,\cdots,\textbf{r}_N)$ and satisfies the time-independent Sch\"odinger equation
 \begin{equation*}
     H\boldsymbol{\Psi} = E\boldsymbol{\Psi} = \lrb{T+V+U}\boldsymbol{\Psi} = \lrb{\sum_{i=1}^N \lrp{-\frac{\hbar^2}{2m_i}\nabla_i^2}+\sum_{i=1}^N V(\textbf{r}_i) + \sum_{i<j}^N U(\textbf{r}_i,\textbf{r}_j)}\boldsymbol{\Psi} 
 \end{equation*}
-where $H$ is the Hamiltonian, $E$ is the total energy of the system, $T$ is the kinetic energy, and $U$ is the electron-electron interaction. The real benefit of DFT is that it maps this $N$-body problem with interactions $U$ to a single-body problem without the interactions $U$. The key to this mapping is the electron density $n(\textbf{r})$ defined as
+where $H$ is the Hamiltonian, $E$ is the total energy of the system, $T$ is the kinetic energy, and $U$ is the electron-electron interaction. The real benefit of DFT is that it maps this $N$-body problem with interactions $U$ to a single-body problem without the interactions. The key to this mapping is the electron density $n(\textbf{r})$ defined as
 \begin{equation*}
     n(\textbf{r}) \equiv N\int d^3\textbf{r}_2 \cdots \int d^3\textbf{r}_N \boldsymbol{\Psi}^*(\textbf{r},\textbf{r}_2,\cdots,\textbf{r}_N)\boldsymbol{\Psi}(\textbf{r},\textbf{r}_2,\cdots,\textbf{r}_N)
 \end{equation*}
@@ -72,7 +77,7 @@ This generalizes naturally to energy levels above the ground state. In particula
 \end{equation}
 This expression can be minimized using the \href{https://en.wikipedia.org/wiki/Lagrange_multiplier}{Lagrangian Method of Undetermined Multipliers} to yield the ground state energy, and in turn all other ground state observables.
 
-\subsection{Kohn-Sham Equation} %%% Kohn-Sham Equation %%%
+\subsubsection{Kohn-Sham Equation} %%% Kohn-Sham Equation %%%
 The Kohn-Sham Equation \cite{KSeq} must be discussed in order to continue the derivation. The Kohn-Sham Equation is the Sch\"odinger equation of a fictitious system of non-interacting particles based on a real system with interactions. The equation is characterized by the Kohn-Sham potential (denoted here as $V_{\mathrm{eff}}$), which is the effective potential that the non-interacting particles move through. The particles in question are normally electrons, and thus the wavefunction can be represented as a \href{https://en.wikipedia.org/wiki/Slater_determinant}{Slater Determinant} constructed from a set of orbitals $\{\psi_i(\textbf{r})\}$ which are the lowest energy solution to 
 \begin{equation}\label{eq:KSeq}
     \lrp{-\frac{\hbar^2}{2m}\nabla^2+ V_{\mathrm{eff}}(\textbf{r})}\psi_i(\textbf{r}) = \varepsilon_i\psi_i(\textbf{r})
@@ -82,7 +87,7 @@ This is a typical representation of the Kohn-Sham Equations, where $\varepsilon_
     n(\textbf{r}) = \sum_i^N |\psi_i(\textbf{r})|^2
 \end{equation*}
 
-\subsection{Effective Potential} %%% Effective Potential %%%
+\subsection{Effective Potentials} %%% Effective Potential %%%
 Returning to the initial derivation, one considers the energy functional that does not explicitly depend on the interaction energy 
 \begin{equation}\label{eq:KSpot}
     E_s[n] = \bra{\boldsymbol{\Psi}_s[n]}T+V_{\mathrm{eff}}(\textbf{r})\ket{\boldsymbol{\Psi}_s[n]} 
@@ -101,7 +106,7 @@ Here $V(\textbf{r})$ is the external potential, the second term is the Hartree t
 \end{figure}
 
 \newpage
-\subsection{Approximations} %%% Approximations %%%
+\subsection{Approximations}\label{sec:XCapprox} %%% Approximations %%%
 The biggest issue with DFT is that exact functionals for the exchange and correlation are only known for the free electron gas. However, this issue can be solved to high accuracy using approximations. 
 
 
@@ -119,25 +124,25 @@ While the GGA approximation improves greatly on LDA, it is also limited by the a
 \end{equation}
 where $r_s$ is the \href{https://en.wikipedia.org/wiki/Wigner\%E2\%80\%93Seitz_radius}{Seitz Radius}, $\zeta$ is the relative spin polarization, $s$ is a dimensionless density gradient, and $F_{XC}$ is the enhancement factor as defined in \cite{PBEfxc}. The PBE approximation of the XC energy functional has proven to be accurate for a large scope of problems in DFT.
 
-\section{DFT + U} %%% DFT + U %%%
-
-Even with the approximations above for the XC functionals, the standard formalism provided for DFT still produces non-physical results for strongly correlated systems such as Mott Insulators \cite{DFT+Ubook}. 
-% Both LDA and GGA have significant error in predicting the insulating character of Mott Insulators, and provide a poor representation of their physical properties.  
-In general, these problems originate from the tendency of most approximate XC functionals to over-delocalize valence electrons and over-stabilize metallic ground states. The simplest model to overcome this deficiency is the Hubbard model; when incorporated into DFT it is denoted by ``$+U$" where $U$ is the Hubbard Correction.
-
 \subsection{Hubbard Model} %%% Hubbard Model %%%
-The \href{https://en.wikipedia.org/wiki/Hubbard_model}{Hubbard Model} \cite{Hubmodel} is used to describe interacting electrons moving about a set $\{\Lambda\}$ of spatially localized orbitals. The motion of the electrons is often refered to as ``hopping", where a strongly localized electron moves from one atomic site to one of its neighbors. The Hamiltonian \footnote{The notation $\sum_{\langle i,j\in \Lambda\rangle}$ implies that the sum is restricted to nearest-neighbor sites.} for this model can be written in the language of second quantization as 
+The \href{https://en.wikipedia.org/wiki/Hubbard_model}{Hubbard Model} \cite{Hubmodel} is used to describe interacting electrons moving about a set $\{\Lambda\}$ of spatially localized orbitals. The motion of the electrons is often refered to as ``hopping", where a strongly localized electron moves from one atomic site to one of its neighbors. The Hamiltonian\footnote{The notation $\sum_{\langle i,j\in \Lambda\rangle}$ implies that the sum is restricted to nearest-neighbor sites.} for this model can be written in the language of second quantization as 
 \begin{equation}\label{eq:HubHam}
     H = -t\sum_{\langle i,j\in \Lambda\rangle}\sum_{\sigma}\lrp{c^{\dagger}_{i\sigma}c_{j\sigma}+c^{\dagger}_{j\sigma}c_{i\sigma}}+U\sum_{i\in \Lambda}n_{i\uparrow}n_{i\downarrow}
 \end{equation}
 $c^{\dagger}$ and $c$ represent the fermionic creation and and annihilation operators respectively, $n_{i\sigma}$ is the number operator, $t$ is the hopping amplitude, and $U$ encodes the on-site Coulomb repulsion. $t$ and $U$ represent the minimal set of parameters necessary to describe the physics of strongly correlated systems. Note that without the second term,  \eqref{eq:HubHam} reduces to the \href{https://en.wikipedia.org/wiki/Tight_binding}{Tight Binding Model}. The consequence of including the second term is a more realistic model that predicts a transition from conductor to insulator based on the ratio $\nicefrac{U}{t}$. For example, the limit of $1\ll \nicefrac{U}{t}$ describes an insulating system as electrons will not have enough energy to overcome the repulsion of neighboring electrons (this is the case for Mott Insulators). 
 
-\subsection{Formulation}
+\subsection{DFT + U} %%% DFT + U %%%
+
+Even with the XC functional approximations \hyperref[sec:XCapprox]{previously outlined}, the standard formalism provided for DFT still produces non-physical results for strongly correlated systems such as Mott Insulators \cite{DFT+Ubook}. 
+% Both LDA and GGA have significant error in predicting the insulating character of Mott Insulators, and provide a poor representation of their physical properties.  
+In general, these problems originate from the tendency of most approximate XC functionals to over-delocalize valence electrons and over-stabilize metallic ground states. The simplest model to overcome this deficiency is the Hubbard model; when incorporated into DFT it is denoted by ``$+U$" where $U$ is the Hubbard Correction.
+
+
 Within DFT + U, the energy functional of the system can be written as 
 \begin{equation}\label{eq:Edft+u}
     E_{DFT+U}[n(\textbf{r})] = E_{DFT}[n(\textbf{r})] + E_{U}[\{n^{i\sigma}_{mm'}\}]-E_{dc}[\{n^{i\sigma}\}]
 \end{equation}
-Here $E_U$ is the term that encodes the electron-electron interactions as described in the Hubbard model, and $E_{DFT}$ is the energy based on standard DFT approximations (LDA, GGA, etc). The last term $E_{dc}$ is a correction to double counting which arises due to the part of the interaction energy $E_{DFT}$ already being contained in the calculation of $E_U$. Since the DFT energy lacks a exact diagramatic expansion, the double counting term is not uniquely defined. For the limit of strongly correlated systems \footnote{Generalized to weakly correlated systems in \cite{Edc_general}} in particular, \cite{DFT+Uformulation} derived the following expression for $E_{dc}$ from the mean-field approximation of the Hubbard Correction  
+Here $E_U$ is the term that encodes the electron-electron interactions as described in the Hubbard model, and $E_{DFT}$ is the energy based on standard DFT approximations (LDA, GGA, etc). The last term $E_{dc}$ is a correction to double counting which arises due to the part of the interaction energy $E_{DFT}$ already being contained in the calculation of $E_U$. Since the DFT energy lacks a exact diagramatic expansion, the double counting term is not uniquely defined. For the limit of strongly correlated systems\footnote{Generalized to weakly correlated systems in \cite{Edc_general}} in particular, \cite{DFT+Uformulation} derived the following expression for $E_{dc}$ from the mean-field approximation of the Hubbard Correction  
 
 \begin{equation*}
     E_{dc}[\{n^i_{mm'}\}] = 
@@ -155,7 +160,7 @@ With these considerations, Ref. \cite{OGDFT+U} proceeds by writing the energy fu
 \begin{equation}
     E = E_{DFT} + \sum_i \lrb{\frac{U^i}{2}\sum_{m,\sigma\neq m',\sigma'}n_{m}^{i\sigma}n^{i\sigma'}_{m'}-\frac{U^i}{2}n^i(n^i-1)}
 \end{equation}
-where $m$ indexes the localized states of the atomic site $i$ and $n_{m}^{i\sigma} = n_{mm}^{i\sigma}$. Using \eqref{eq:nHub}, the action of the Hubbard corrective potential \footnote{Further generalized in \cite{DFT+Uformulation} and \cite{Duradev}} can be defined as 
+where $m$ indexes the localized states of the atomic site $i$ and $n_{m}^{i\sigma} = n_{mm}^{i\sigma}$. Using \eqref{eq:nHub}, the action of the Hubbard corrective potential\footnote{Further generalized in \cite{DFT+Uformulation} and \cite{Duradev}} can be defined as 
 \begin{equation}
     V\ket{\psi^\sigma_{kv}} = V_{DFT}\ket{\psi^\sigma_{kv}} + \sum_{i,m}U^i\lrp{\frac{1}{2}-n^{i\sigma}_m}\ket{\phi^i_{m}}\bra{\phi^i_{m}}\ket{\psi^\sigma_{kv}}
 \end{equation}
