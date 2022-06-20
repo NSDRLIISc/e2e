@@ -23,11 +23,11 @@
     
 
 \begin{document}
-\noindent VASP to QE table \hfill Andres Covarrubias    \\
+\noindent VASP to QE tables \hfill Andres Covarrubias    \\
 5/23/2022
 
 \hrulefill
-
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% VASP OBJECTS %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section*{VASP Objects}
 All VASP objects are sourced from the \href{https://pymatgen.org/pymatgen.io.vasp.html?highlight=io\%20vasp\#module-pymatgen.io.vasp}{pymatgen.io.vasp} package of pymatgen except for Vasprun, which is a stand alone python project
 \begin{center}
@@ -37,104 +37,315 @@ All VASP objects are sourced from the \href{https://pymatgen.org/pymatgen.io.vas
  
  %%% MPRelaxSet %%%
  \href{https://pymatgen.org/pymatgen.io.vasp.sets.html?highlight=mprelaxset#pymatgen.io.vasp.sets.MPRelaxSet}{MPRelaxSet} & 
- %%% Notes %%%
+ % Notes
  Implementation of VaspInputSet utilizing parameters in the public Materials Project. Typically, the pseudopotentials chosen contain more electrons than the MIT parameters, and the k-point grid is ~50\% more dense. The LDAUU parameters are also different due to the different psps used, which result in different fitted values. & 
- %%% QE Replacement %%%
+ % QE Replacement
 \href{https://pymatgen.org/pymatgen.io.pwscf.html?highlight=pwscf}{pwscf} module with scf kwargs\\ \hline
  
  %%% MPStaticSet %%%
  \href{https://pymatgen.org/pymatgen.io.vasp.sets.html?highlight=mpstaticset#pymatgen.io.vasp.sets.MPStaticSet}{MPStaticSet} &
-  %%% Notes %%%
+  % Notes
 Creates input files for a static calculation. &
- %%% QE Replacement %%%
+ % QE Replacement
 \href{https://pymatgen.org/pymatgen.io.pwscf.html?highlight=pwscf}{pwscf} module with nscf kwargs \\ \hline
  
  %%% MPSOCSet %%%
  \href{https://pymatgen.org/pymatgen.io.vasp.sets.html?highlight=mpsocset#pymatgen.io.vasp.sets.MPSOCSet}{MPSOCSet} &
-  %%% Notes %%%
+  % Notes
  An input set for running spin-orbit coupling (SOC) calculations. &
- %%% QE Replacement %%%
+ % QE Replacement
 \href{https://pymatgen.org/pymatgen.io.pwscf.html?highlight=pwscf}{pwscf} module with SOC kwargs \\ \hline
  
  %%% Vasprun %%%
  \href{https://vasprun-xml.readthedocs.io/en/latest/}{Vasprun} &
-  %%% Notes %%%
+  % Notes
  A python project used for quick analysis of VASP calculation solely from vasprun.xml &
- %%% QE Replacement %%%
+ % QE Replacement
  \href{https://github.com/maxhutch/qe-tools/blob/master/README.md}{qe-tools} \\ \hline
 \end{tabularx}
 \end{table}
 \end{center}
+
 \newpage
+%%%%%%%%%%%%%%%%%%%%%%%%%% VASP BUILT INS %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section*{VASP Built-ins}
+\begin{center}
+\begin{table}[ht]
+\begin{tabularx}{\linewidth}{|>{\RaggedRight}p{2.5cm}|x|x|}\hline
+ VASP  & Notes & QE \\ \hline
+
+  %%% Chgcar %%%
+ \href{https://www.vasp.at/wiki/index.php/CHGCAR}{Chgcar} &
+  % Notes
+ The CHGCAR file stores the charge density and the PAW one-center occupancies and can be used for restarting VASP calculations &
+ % QE Replacement
+Parse QE output using \href{https://github.com/nomad-coe/nomad-parser-quantum-espresso}{NOMAD} or Pymatgen  \\ \hline
+ 
+ %%% Oszicar %%%
+ \href{https://www.vasp.at/wiki/index.php/OSZICAR}{Oszicar} &
+  % Notes
+ Information about convergence speed and about the current step is written to stdout and to the OSZICAR file. &
+ % QE Replacement
+Parse QE output using \href{https://github.com/nomad-coe/nomad-parser-quantum-espresso}{NOMAD} or Pymatgen  \\ \hline
+ 
+ %%% Outcar %%%
+ \href{https://www.vasp.at/wiki/index.php/OUTCAR}{Outcar} &
+  % Notes
+ The OUTCAR file gives detailed output of a VASP run &
+ % QE Replacement
+Parse QE output using \href{https://github.com/nomad-coe/nomad-parser-quantum-espresso}{NOMAD} or Pymatgen \\ \hline
+ 
+ %%% Potcar %%%
+ \href{https://www.vasp.at/wiki/index.php/POTCAR}{Potcar} &
+  % Notes
+ The POTCAR file essentially contains the pseudopotential for each atomic species used in the calculation. If the number of species is larger than one, one simply concatenates the POTCAR files of the species. &
+ % QE Replacement
+ Specify paths to the Pseudo-potential files in the QE input.  \\ \hline
+\end{tabularx}
+\end{table}
+\end{center}
+\newpage
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%% INPUT FILE PARAMETERS %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section*{Input File Parameters}
 \begin{center}
 \begin{table}[ht]
 \begin{tabularx}{\linewidth}{|>{\RaggedRight}p{2.5cm}|x|x|}\hline
  VASP  & Notes & QE \\ \hline
  
  
- %%% KPAR %%%
+ %%%%%%%%%%%%% KPAR %%%%%%%%%%%%%
  \href{https://www.vasp.at/wiki/index.php/KPAR}{KPAR} &
-  %%% Notes %%%
- Number of k-points &
- %%% QE Replacement %%%
-K-points card on PWscf file \\ \hline
+  % Notes
+ Number of k-points that are to be treated in parallel &
+ % QE Replacement
+No direct replacement, see \href{https://www.quantum-espresso.org/Doc/user_guide/node17.html}{parallelism} section in QE user guide \\ \hline
 
-%%% NSIM %%%
+ %%%%%%%%%%%%% NCORE %%%%%%%%%%%%%
+ \href{https://www.vasp.at/wiki/index.php/NCORE}{NCORE} &
+  % Notes
+ Determines the number of compute cores that work on an individual orbital &
+ % QE Replacement
+ No direct replacement, see \href{https://www.quantum-espresso.org/Doc/user_guide/node17.html}{parallelism} section in QE user guide \\ \hline
+
+ %%%%%%%%%%%%% NSIM %%%%%%%%%%%%%
  \href{https://www.vasp.at/wiki/index.php/NSIM}{NSIM} &
-  %%% Notes %%%
+  % Notes
  Sets the number of bands that are optimized simultaneously by the RMM-DIIS algorithm. &
- %%% QE Replacement %%%
- TODO \\ \hline
- 
-  %%% POTIM %%%
- \href{https://www.vasp.at/wiki/index.php/POTIM}{POTIM} &
-  %%% Notes %%%
- Sets the time step in molecular dynamics or the step width in ionic relaxations. &
- %%% QE Replacement %%%
- TODO \\ \hline
- 
-  %%% SYMPREC %%%
+ % QE Replacement
+ \href{https://www.quantum-espresso.org/Doc/INPUT_PW.html#idm1487}{diago\_rmm\_ndim} in \&electrons card, need to set  \\ \hline
+
+ %%%%%%%%%%%%% SYMPREC %%%%%%%%%%%%%
  \href{https://www.vasp.at/wiki/index.php/SYMPREC}{SYMPREC} &
-  %%% Notes %%%
- Determines to which accuracy the positions in the POSCAR file must be specified &
- %%% QE Replacement %%%
+  % Notes
+ Determines to which accuracy the positions of the atomic sites must be specified &
+ % QE Replacement
  TODO \\ \hline
-  %%% Chgcar %%%
- \href{https://www.vasp.at/wiki/index.php/CHGCAR}{Chgcar} &
-  %%% Notes %%%
- The CHGCAR file stores the charge density and the PAW one-center occupancies and can be used for restarting VASP calculations &
- %%% QE Replacement %%%
-Parse QE output using \href{https://github.com/nomad-coe/nomad-parser-quantum-espresso}{NOMAD}  \\ \hline
  
- %%% Oszicar %%%
- \href{https://www.vasp.at/wiki/index.php/OSZICAR}{Oszicar} &
-  %%% Notes %%%
- Information about convergence speed and about the current step is written to stdout and to the OSZICAR file. &
- %%% QE Replacement %%%
-Parse QE output using \href{https://github.com/nomad-coe/nomad-parser-quantum-espresso}{NOMAD}  \\ \hline
+ %%%%%%%%%%%%% ISMEAR %%%%%%%%%%%%%
+ \href{https://www.vasp.at/wiki/index.php/ISMEAR}{ISMEAR} &
+  % Notes
+ Determines how the partial occupancies $f_{nk}$ are set for each orbital. See documentation for different types of smearing options &
+ % QE Replacement
+ \href{https://www.quantum-espresso.org/Doc/INPUT_PW.html#idm382}{smearing} in \&system card \\ \hline
  
- %%% Outcar %%%
- \href{https://www.vasp.at/wiki/index.php/OUTCAR}{Outcar} &
-  %%% Notes %%%
- The OUTCAR file gives detailed output of a VASP run &
- %%% QE Replacement %%%
-Parse QE output using \href{https://github.com/nomad-coe/nomad-parser-quantum-espresso}{NOMAD} \\ \hline
+ %%%%%%%%%%%%% SIGMA %%%%%%%%%%%%%
+ \href{https://www.vasp.at/wiki/index.php/SIGMA}{SIGMA} &
+  % Notes
+ Specifies the width of the smearing in eV. &
+ % QE Replacement
+ \href{https://www.quantum-espresso.org/Doc/INPUT_PW.html#idm406}{q2sigma} in \&system card \\ \hline
  
- %%% Potcar %%%
- \href{https://www.vasp.at/wiki/index.php/POTCAR}{Potcar} &
-  %%% Notes %%%
- The POTCAR file essentially contains the pseudopotential for each atomic species used in the calculation. If the number of species is larger than one, one simply concatenates the POTCAR files of the species. &
- %%% QE Replacement %%%
- Specify paths to the Pseudo-potential files in the QE input. Maybe set up another auxiliary dict for element / pseudo-potential key value pairs.   \\ \hline
+ %%%%%%%%%%%%% ISIF %%%%%%%%%%%%%
+ \href{https://www.vasp.at/wiki/index.php/ISIF}{ISIF} &
+  % Notes
+ Determines whether the stress tensor is calculated and which principal degrees-of-freedom are allowed to change in relaxation and molecular dynamics runs. &
+ % QE Replacement
+ \href{https://www.quantum-espresso.org/Doc/INPUT_PW.html#idm735}{tstress} in \&control card \\ \hline
+ 
+ %%%%%%%%%%%%% EDIFF %%%%%%%%%%%%%
+ \href{https://www.vasp.at/wiki/index.php/EDIFF}{EDIFF} &
+  % Notes
+ Specifies the global break condition for the electronic SC-loop in units of eV. &
+ % QE Replacement
+ \href{https://www.quantum-espresso.org/Doc/INPUT_PW.html#idm771}{conv\_thr} in \&electrons card \\ \hline
+ 
+ %%%%%%%%%%%%% EDIFFG %%%%%%%%%%%%%
+ \href{https://www.vasp.at/wiki/index.php/EDIFFG}{EDIFFG} &
+  % Notes
+  Defines the break condition for the ionic relaxation loop. &
+ % QE Replacement
+ \href{https://www.quantum-espresso.org/Doc/INPUT_PW.html#idm117}{etot\_conv\_thr} in \&control card \\ \hline
+ 
+ %%%%%%%%%%%%% LCHARG %%%%%%%%%%%%%
+ \href{https://www.vasp.at/wiki/index.php/LCHARG}{LCHARG} &
+  % Notes
+ Determines whether the charge densities files (CHGCAR and CHG) are written &
+ % QE Replacement
+ Specify with \href{https://www.quantum-espresso.org/Doc/INPUT_PW.html#idm1487}{disk\_io} options in \&control card \\ \hline
+ 
+  %%%%%%%%%%%%% LWAVE %%%%%%%%%%%%%
+ \href{template.url}{LWAVE} &
+  % Notes
+ Determines whether the wavefunctions are written file at the end of a run &
+ % QE Replacement
+ Specify with \href{https://www.quantum-espresso.org/Doc/INPUT_PW.html#idm1487}{disk\_io} options in \&control card \\ \hline
+\end{tabularx}
+\end{table}
+\end{center}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%% INPUT FILE PARAMETERS 2 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\newpage
+\begin{center}
+\begin{table}[ht]
+\begin{tabularx}{\linewidth}{|>{\RaggedRight}p{2.5cm}|x|x|}\hline
+ VASP  & Notes & QE \\ \hline
+ 
+  %%%%%%%%%%%%% POTIM %%%%%%%%%%%%%
+ \href{https://www.vasp.at/wiki/index.php/POTIM}{POTIM} &
+  % Notes
+ Sets the time step in molecular dynamics or the step width in ionic relaxations. &
+ % QE Replacement
+ \href{https://www.quantum-espresso.org/Doc/INPUT_PW.html#idm36}{dt} in \&control card \\ \hline
+  
+ %%%%%%%%%%%%% ICHARG %%%%%%%%%%%%%
+ \href{https://www.vasp.at/wiki/index.php/ICHARG}{ICHARG} &
+  % Notes
+ Determines how VASP constructs the initial charge density. &
+ % QE Replacement
+ \href{https://www.quantum-espresso.org/Doc/INPUT_PW.html#idm764}{startingwfc} in \&electrons card \\ \hline
+
+ %%%%%%%%%%%%% LDAU %%%%%%%%%%%%%
+ \href{https://www.vasp.at/wiki/index.php/LDAU}{LDAU} &
+  % Notes
+ Switches on DFT+U &
+ % QE Replacement
+ \href{https://www.quantum-espresso.org/Doc/INPUT_PW.html#idm1699}{\&HUBBARD} card. See \href{https://www.quantum-espresso.org/wp-content/uploads/2022/03/pw_user_guide.pdf}{DFT+U} section of user guide for specifics on compilation. \\ \hline
+ 
+ %%%%%%%%%%%%% LDAUJ %%%%%%%%%%%%%
+ \href{https://www.vasp.at/wiki/index.php/LDAUJ}{LDAUJ} &
+  % Notes
+ Specifies the strength of the effective on-site exchange interactions &
+ % QE Replacement
+ Specify in \href{https://www.quantum-espresso.org/Doc/INPUT_PW.html#idm1699}{\&HUBBARD} card  \\ \hline
+ 
+ %%%%%%%%%%%%% LDAUL %%%%%%%%%%%%%
+ \href{https://www.vasp.at/wiki/index.php/LDAUL}{LDAUL} &
+  % Notes
+ Specifies the $l$-quantum number for which the on-site interaction is added. &
+ % QE Replacement
+ See \href{https://www.quantum-espresso.org/wp-content/uploads/2022/03/pw_user_guide.pdf}{DFT+U} section of user guide for specifics on compilation. \\ \hline
+ 
+ %%%%%%%%%%%%% LDAUU %%%%%%%%%%%%%
+ \href{https://www.vasp.at/wiki/index.php/LDAUU}{LDAUU} &
+  % Notes
+ Specifies the strength of the effective on-site Coulomb interactions. &
+ % QE Replacement
+ Specify in \href{https://www.quantum-espresso.org/Doc/INPUT_PW.html#idm1699}{\&HUBBARD} card \\ \hline
+ 
+ %%%%%%%%%%%%% LDAUPRINT %%%%%%%%%%%%%
+ \href{https://www.vasp.at/wiki/index.php/LDAUPRINT}{LDAUPRINT} &
+  % Notes
+ Controls the verbosity of the DFT+U routines. &
+ % QE Replacement
+ TODO \\ \hline
+ 
+  %%%%%%%%%%%%% LDAUTYPE %%%%%%%%%%%%%
+ \href{https://www.vasp.at/wiki/index.php/LDAUTYPE}{LDAUTYPE} &
+  % Notes
+ Specifies the DFT+U variant that will be used. &
+ % QE Replacement
+ Specify in \href{https://www.quantum-espresso.org/Doc/INPUT_PW.html#idm1699}{\&HUBBARD} card \\ \hline
+ 
+ %%%%%%%%%%%%% LASPH %%%%%%%%%%%%%
+ \href{https://www.vasp.at/wiki/index.php/LASPH}{LASPH} &
+  % Notes
+ Boolean deciding to include non-spherical contributions related to the gradient of the density in the PAW spheres. &
+ % QE Replacement
+ TODO \\ \hline
+ 
+ %%%%%%%%%%%%% LMAXMIX %%%%%%%%%%%%%
+ \href{template.url}{LMAXMIX} &
+  % Notes
+ Controls up to which $l$-quantum number the one-center PAW charge densities are passed through the charge density mixer and written to the CHGCAR file. &
+ % QE Replacement
+ TODO \\ \hline
+ 
+ %%%%%%%%%%%%% NELM %%%%%%%%%%%%%
+ \href{https://www.vasp.at/wiki/index.php/NELM}{NELM} &
+  % Notes
+ Sets the maximum number of electronic self-consistency steps. &
+ % QE Replacement
+ \href{https://www.quantum-espresso.org/Doc/INPUT_PW.html#idm78}{electron\_maxstep} in \&electrons card \\ \hline
+ 
+ %%%%%%%%%%%%% LVHAR %%%%%%%%%%%%%
+ \href{https://www.vasp.at/wiki/index.php/LVHAR}{LVHAR} &
+  % Notes
+ Toggles the XC term in the definition of the potential &
+ % QE Replacement
+ TODO \\ \hline
+ 
+ %%%%%%%%%%%%% LVTOT %%%%%%%%%%%%%
+ \href{https://www.vasp.at/wiki/index.php/LVTOT}{LVTOT} &
+  % Notes
+ Determines whether the total local potential is written to file &
+ % QE Replacement
+ TODO \\ \hline
+ 
+\end{tabularx}
+\end{table}
+\end{center}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%% INPUT FILE PARAMETERS 3 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\newpage
+\begin{center}
+\begin{table}[ht]
+\begin{tabularx}{\linewidth}{|>{\RaggedRight}p{2.5cm}|x|x|}\hline
+ VASP  & Notes & QE \\ \hline
+
+%%%%%%%%%%%%% LORBMOM %%%%%%%%%%%%%
+ \href{https://www.vasp.at/wiki/index.php/LORBMOM}{LORBMOM} &
+  % Notes
+ Use the projectors of the PAW potentials to calculate the orbital moment within the PAW spheres, and write them to file. &
+ % QE Replacement
+ TODO \\ \hline
+ 
+ %%%%%%%%%%%%% LAECHG %%%%%%%%%%%%%
+ \href{https://www.vasp.at/wiki/index.php/LAECHG}{LAECHG} &
+  % Notes
+ the all-electron charge density will be reconstructed explicitly and written to files. &
+ % QE Replacement
+ TODO \\ \hline
+ 
+ %%%%%%%%%%%%% NELMIN %%%%%%%%%%%%%
+ \href{https://www.vasp.at/wiki/index.php/NELMIN}{NELMIN} &
+  % Notes
+ specifies the minimum number of electronic self-consistency steps. &
+ % QE Replacement
+ TODO \\ \hline
+ 
+ %%%%%%%%%%%%% ISYM %%%%%%%%%%%%%
+ \href{https://www.vasp.at/wiki/index.php/ISYM}{ISYM} &
+  % Notes
+ Determines how to treat symmetry. &
+ % QE Replacement
+ Can toggle symmetry using \href{https://www.quantum-espresso.org/Doc/INPUT_PW.html#idm768}{nosym} in the \&system card \\ \hline
+ 
+ %%%%%%%%%%%%% ALGO %%%%%%%%%%%%%
+ \href{https://www.vasp.at/wiki/index.php/ALGO}{ALGO} &
+  % Notes
+ Specify the electronic minimization algorithm &
+ % QE Replacement
+ \href{https://www.quantum-espresso.org/Doc/INPUT_PW.html#idm768}{diagonalization} in \&electrons card \\ \hline
+
 \end{tabularx}
 \end{table}
 \end{center}
 \end{document}
 
-% %%% Template %%%
-%  \href{template.url}{Template} &
-%   %%% Notes %%%
+%%%%%%%%%%%%%% Template %%%%%%%%%%%%%
+%  \href{templateurl}{Template} &
+%   % Notes
 %  notes &
-%  %%% QE Replacement %%%
+%  % QE Replacement
 %  TODO \\ \hline
