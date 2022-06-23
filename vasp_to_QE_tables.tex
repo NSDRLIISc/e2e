@@ -61,7 +61,7 @@ Creates input files for a static calculation. &
   % Notes
  A python project used for quick analysis of VASP calculation solely from vasprun.xml &
  % QE Replacement
- \href{https://github.com/maxhutch/qe-tools/blob/master/README.md}{qe-tools} \\ \hline
+ \href{https://github.com/maxhutch/qe-tools/blob/master/README.md}{qe-tools} or command line scripting\\ \hline
 \end{tabularx}
 \end{table}
 \end{center}
@@ -79,28 +79,28 @@ Creates input files for a static calculation. &
   % Notes
  The CHGCAR file stores the charge density and the PAW one-center occupancies and can be used for restarting VASP calculations &
  % QE Replacement
-Parse QE output using \href{https://github.com/nomad-coe/nomad-parser-quantum-espresso}{NOMAD} or Pymatgen  \\ \hline
+Parse QE output using \href{https://github.com/nomad-coe/nomad-parser-quantum-espresso}{NOMAD}, Pymatgen, or GREP  \\ \hline
  
  %%% Oszicar %%%
  \href{https://www.vasp.at/wiki/index.php/OSZICAR}{Oszicar} &
   % Notes
  Information about convergence speed and about the current step is written to stdout and to the OSZICAR file. &
  % QE Replacement
-Parse QE output using \href{https://github.com/nomad-coe/nomad-parser-quantum-espresso}{NOMAD} or Pymatgen  \\ \hline
+Parse QE output using \href{https://github.com/nomad-coe/nomad-parser-quantum-espresso}{NOMAD}, Pymatgen, or GREP   \\ \hline
  
  %%% Outcar %%%
  \href{https://www.vasp.at/wiki/index.php/OUTCAR}{Outcar} &
   % Notes
  The OUTCAR file gives detailed output of a VASP run &
  % QE Replacement
-Parse QE output using \href{https://github.com/nomad-coe/nomad-parser-quantum-espresso}{NOMAD} or Pymatgen \\ \hline
+Parse QE output using \href{https://github.com/nomad-coe/nomad-parser-quantum-espresso}{NOMAD}, Pymatgen, or GREP  \\ \hline
  
  %%% Potcar %%%
  \href{https://www.vasp.at/wiki/index.php/POTCAR}{Potcar} &
   % Notes
  The POTCAR file essentially contains the pseudopotential for each atomic species used in the calculation. If the number of species is larger than one, one simply concatenates the POTCAR files of the species. &
  % QE Replacement
- Specify paths to the Pseudo-potential files in the QE input.  \\ \hline
+\href{https://www.quantum-espresso.org/Doc/INPUT_PW.html#idm1484}{pseudo\_dir} in the \&control card, and specifying the pseudopotential file for each element specifically in the \&ATOMIC\_SPECIES card\\ \hline
 \end{tabularx}
 \end{table}
 \end{center}
@@ -140,7 +140,7 @@ No direct replacement, see \href{https://www.quantum-espresso.org/Doc/user_guide
   % Notes
  Determines to which accuracy the positions of the atomic sites must be specified &
  % QE Replacement
- TODO \\ \hline
+ Specify accuracy in \&ATOMIC\_POSITIONS card \\ \hline
  
  %%%%%%%%%%%%% ISMEAR %%%%%%%%%%%%%
  \href{https://www.vasp.at/wiki/index.php/ISMEAR}{ISMEAR} &
@@ -246,9 +246,9 @@ No direct replacement, see \href{https://www.quantum-espresso.org/Doc/user_guide
  %%%%%%%%%%%%% LDAUPRINT %%%%%%%%%%%%%
  \href{https://www.vasp.at/wiki/index.php/LDAUPRINT}{LDAUPRINT} &
   % Notes
- Controls the verbosity of the DFT+U routines. &
+ Controls the verbosity of the DFT+U routines (i.e. Write occupancy matrix to the OUTCAR file). &
  % QE Replacement
- TODO \\ \hline
+ No direct replacement, occupancy matrix always written to output. \\ \hline
  
   %%%%%%%%%%%%% LDAUTYPE %%%%%%%%%%%%%
  \href{https://www.vasp.at/wiki/index.php/LDAUTYPE}{LDAUTYPE} &
@@ -260,16 +260,16 @@ No direct replacement, see \href{https://www.quantum-espresso.org/Doc/user_guide
  %%%%%%%%%%%%% LASPH %%%%%%%%%%%%%
  \href{https://www.vasp.at/wiki/index.php/LASPH}{LASPH} &
   % Notes
- Boolean deciding to include non-spherical contributions related to the gradient of the density in the PAW spheres. &
+ Boolean for toggling non-spherical contributions related to the gradient of the density in the PAW spheres. &
  % QE Replacement
- TODO \\ \hline
+ No direct replacement. Must use gradient corrected pseudo-potential a priori \\ \hline
  
  %%%%%%%%%%%%% LMAXMIX %%%%%%%%%%%%%
- \href{template.url}{LMAXMIX} &
+ \href{https://www.vasp.at/wiki/index.php/LMAXMIX}{LMAXMIX} &
   % Notes
  Controls up to which $l$-quantum number the one-center PAW charge densities are passed through the charge density mixer and written to the CHGCAR file. &
  % QE Replacement
- TODO \\ \hline
+ Preform \href{https://www.quantum-espresso.org/Doc/INPUT_PROJWFC.html}{projwfc.x} post-processing calculation \\ \hline
  
  %%%%%%%%%%%%% NELM %%%%%%%%%%%%%
  \href{https://www.vasp.at/wiki/index.php/NELM}{NELM} &
@@ -283,14 +283,14 @@ No direct replacement, see \href{https://www.quantum-espresso.org/Doc/user_guide
   % Notes
  Toggles the XC term in the definition of the potential &
  % QE Replacement
- TODO \\ \hline
+ No direct replacement, but not needed in either code \\ \hline
  
  %%%%%%%%%%%%% LVTOT %%%%%%%%%%%%%
  \href{https://www.vasp.at/wiki/index.php/LVTOT}{LVTOT} &
   % Notes
  Determines whether the total local potential is written to file &
  % QE Replacement
- TODO \\ \hline
+ No direct replacement, but not needed in either code \\ \hline
  
 \end{tabularx}
 \end{table}
@@ -308,21 +308,21 @@ No direct replacement, see \href{https://www.quantum-espresso.org/Doc/user_guide
   % Notes
  Use the projectors of the PAW potentials to calculate the orbital moment within the PAW spheres, and write them to file. &
  % QE Replacement
- TODO \\ \hline
+ \href{https://www.quantum-espresso.org/Doc/INPUT_PW.html#idm128}{lorbm} in \&control card \\ \hline
  
  %%%%%%%%%%%%% LAECHG %%%%%%%%%%%%%
  \href{https://www.vasp.at/wiki/index.php/LAECHG}{LAECHG} &
   % Notes
  the all-electron charge density will be reconstructed explicitly and written to files. &
  % QE Replacement
- TODO \\ \hline
+ No direct replacement, but not needed in either code \\ \hline
  
  %%%%%%%%%%%%% NELMIN %%%%%%%%%%%%%
  \href{https://www.vasp.at/wiki/index.php/NELMIN}{NELMIN} &
   % Notes
  specifies the minimum number of electronic self-consistency steps. &
  % QE Replacement
- TODO \\ \hline
+ No direct replacement \\ \hline
  
  %%%%%%%%%%%%% ISYM %%%%%%%%%%%%%
  \href{https://www.vasp.at/wiki/index.php/ISYM}{ISYM} &
