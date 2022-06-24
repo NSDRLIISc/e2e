@@ -1,11 +1,10 @@
 '''#!/home/magtest/test_env/bin/python'''
 
-from pymatgen.io.vasp.sets import MPRelaxSet, MPStaticSet, MPSOCSet
-from pymatgen import Structure
+from pymatgen.core import Structure
 from pymatgen.core.periodic_table import Element
-from pymatgen.analysis.magnetism.analyzer import MagneticStructureEnumerator, CollinearMagneticStructureAnalyzer
-from pymatgen.io.vasp.outputs import Vasprun, Chgcar, Oszicar, Outcar, Potcar
-from pymatgen.command_line.bader_caller import bader_analysis_from_objects
+from pymatgen.core.analysis.magnetism.analyzer import MagneticStructureEnumerator, CollinearMagneticStructureAnalyzer
+from pymatgen.core.io import pwscf
+from pymatgen.core.command_line.bader_caller import bader_analysis_from_objects
 import sys
 import os
 from shutil import copyfile
@@ -22,23 +21,22 @@ from numba import jit, cuda
 from pickle import load, dump
 
 
-__author__ = "Arnab Kabiraj"
-__copyright__ = "Copyright 2019, NSDRL, IISc Bengaluru"
-__credits__ = ["Arnab Kabiraj", "Santanu Mahapatra"]
+__author__ = "Andres Covarrubias"
+#__copyright__ = "Copyright 2019, NSDRL, IISc Bengaluru"
+__credits__ = ["Andres Covarrubias"]
 
 root_path = os.getcwd()
 start_time_global = time()
 
-xc = 'PBE_54'
+# xc = 'PBE_54'
 mag_prec = 0.1
 enum_prec = 0.001
 max_neigh = 5
 GPU_accel = False
 padding = True
-nsim = 4
-kpar = 2
-ncore = 1
-symprec = 1e-8
+# nsim = 4
+# kpar = 2
+# ncore = 1
 d_thresh = 0.05
 acc = 'default'
 LDAUJ_povided = {}
@@ -275,8 +273,8 @@ def tFunc(spin_abs,spin_x,spin_y,spin_z,mags,magsqs,T,J2flag,J3flag,J4flag,J5fla
 msg = '*'*150
 print(msg)
 writeLog(msg)
-msg = '*** this code have been developed by Arnab Kabiraj at Nano-Scale Device Research Laboratory (NSDRL), IISc, Bengaluru, India ***\n'
-msg += '*** for any queries please contact the authors at kabiraj@iisc.ac.in or santanu@iisc.ac.in ***'
+msg = '*** This code has been developed by Andres Covarrubias at the University of Houston, Houston, TX, United States of America ***\n'
+# msg += '*** for any queries please contact the authors at kabiraj@iisc.ac.in or santanu@iisc.ac.in ***'
 print(msg)
 writeLog(msg)
 msg = '*'*150
