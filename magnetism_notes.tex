@@ -1,0 +1,101 @@
+\documentclass[12pt]{article}
+\usepackage[margin=1in]{geometry}
+\usepackage[all]{xy}
+
+
+\usepackage{amsmath,amsthm,amssymb,color,latexsym}
+\usepackage{geometry}
+\usepackage{physics}
+\usepackage{mathtools}
+\geometry{letterpaper}    
+\usepackage{graphicx}
+\usepackage{nicefrac}
+\usepackage{enumitem}
+\newcommand{\lrp}[1]{\left( #1 \right)}
+\newcommand{\lrb}[1]{\left[ #1 \right]}
+\usepackage{cancel}
+\usepackage{hyperref}
+\hypersetup{
+    colorlinks=true,
+    urlcolor=cyan,
+    }
+
+\begin{document}
+\noindent Magnetism Notes \hfill Andres Covarrubias    \\
+7/7/22 \hfill 
+
+\hrulefill
+\section{Curie Temperature} 
+For a ferromagnet to exist, there needs to be an internal interaction that tends to line up a systems' magnetic moments parallel to each other. Let us postulate such an interaction exists and call it the \href{https://en.wikipedia.org/wiki/Exchange_interaction}{Exchange Interaction}. This orienting effect plays a key role in creating a ferromagnet's permanent magnetization. The exchange interaction is naturally opposed by thermal agitation, and at elevated temperatures the spin order is often destroyed. The temperature at which this happens is known as the \href{https://en.wikipedia.org/wiki/Curie_temperature}{Curie Temperature} $T_c$, and it represents a phase transition from a magnetic to non-magnetic state. 
+
+\subsection{Exchange Interaction}
+The \href{https://en.wikipedia.org/wiki/Exchange_interaction}{Exchange Interaction} is a purely quantum mechanical effect that only occurs between identical particles, and arises from the wave function of the particles being subject to \href{https://en.wikipedia.org/wiki/Identical_particles}{exchange symmetry}. Physically, the exchange interaction alters the expectation value of the distance when the wave function of two or more identical particles overlap. Specifically, it increases (decreases) the expectation value of the distance for fermions (bosons) when compared to distinguishable particles. Thus the charge distribution of a system of two spins depends on whether the spins are parallel or antiparallel, and the electrostatic energy of a system will depend on the relative orientation of the spins. The difference in energy between these two orientations defines the \textbf{exchange energy}. Systems where the exchange energy is much larger than the competing magnetic dipole-dipole interaction (which tends to align dipoles in an anti-parallel arrangement) are frequently called magnetic materials. For instance, in Iron the exchange interaction is roughly 1000 times stronger than the dipole interaction. 
+
+Since the exchange interaction effects the energy of the system, it must be accounted for in the Hamiltonian. The exchange interaction of atoms $i$,$j$ with electron spins $S_i$,$S_j$ can be accurately represented by the \href{https://en.wikipedia.org/wiki/Quantum_Heisenberg_model}{Heisenberg model}
+\begin{equation}
+    U = -2J\textbf{S}_i\cdot\textbf{S}_j
+\end{equation}
+where $J$\footnote{If $J>0$, the exchange integral will favor parallel spins and in turn favor Ferromagnetism. Conversely if $J<0$, the exchange integral will favor anti-parallel spins which could lead to Anti-Ferromagnetism} is the \href{https://en.wikipedia.org/wiki/Exchange_interaction}{exchange integral}, which generally follow the form of
+\begin{equation}
+    J = \int \Phi^*_a(\textbf{r}_1)\Phi^*_b(\textbf{r}_2)\lrp{\frac{1}{R_{ab}}+\frac{1}{r_{12}}-\frac{1}{r_{a1}}-\frac{1}{r_{b2}}}\Phi_b(\textbf{r}_1)\Phi_a(\textbf{r}_2)d\textbf{r}_1d\textbf{r}_2
+\end{equation} 
+\newpage
+This form suggests that there is a direct coupling between the directions of the two spins. Consider an atom that has $z$ nearest neighbors; each connected to the center atom by the interaction $J$. By applying the mean field approximation and assuming that $J=0$ for distant neighbors
+\begin{equation}
+    J = \frac{3k_B T_c}{2zS(S+1)}
+\end{equation}
+\begin{figure}
+    \centering
+    \includegraphics[scale = 1]{heiscouplingconstant.PNG}
+    \caption{Visualization of the coupling $J$ in a lattice}
+    \label{fig:Jviz}
+\end{figure}
+\subsection{Magnetic Anisotropy}
+Although the exchange interaction keeps spins aligned, it does not align them in a particular direction. Without \href{https://en.wikipedia.org/wiki/Magnetic_anisotropy}{Magnetic Anisotropy}, the spins would randomly would change direction in response to thermal fluctuations and the system would be superparamagnetic. 
+
+Magnetic Anisotropy is when it takes more energy to magnetize a system in certain directions than in others. For most magnetically anisotropic materials, there are two easiest directions to magnetize the material, which are a 180° rotation apart. The line parallel to these directions is called the easy axis. In other words, the easy axis is an energetically favorable direction of spontaneous magnetization. Because the two opposite directions along an easy axis are usually equivalently easy to magnetize along, the actual direction of magnetization can just as easily settle into either direction, which is an example of spontaneous symmetry breaking.
+
+A specific instance of this is \href{https://en.wikipedia.org/wiki/Magnetocrystalline_anisotropy}{Magnetocrystalline Anisotropy}, where the atomic structure of a crystal introduces preferential directions for the magnetization. These directions are usually related to the principal axes of its crystal lattice. The source of this anisotropy is the \href{https://en.wikipedia.org/wiki/Spin\%E2\%80\%93orbit_interaction}{Spin-Orbit Interaction}. Specifically, the orbital motion of the electrons couples with crystal field,  giving rise to the first order contribution to magnetocrystalline anisotropy. 
+\begin{figure}
+    \centering
+    \includegraphics[scale = 1.2]{MAE_pic.PNG}
+    \caption{Visualization from Kittel}
+    \label{fig:MAE}
+\end{figure}
+\subsection{2D Magnetic Materials}
+Magnetic materials in general are characterized by having their spin aligned over a macroscopic length scale. The alignment of the spins is typically driven by exchange interaction between neighboring spins. While at absolute zero the alignment can always exist, thermal fluctuations misalign magnetic moments above the Curie temperature, causing a phase transition to a non-magnetic state. Whether $T_c$ is above absolute zero depends heavily on the dimensionality of the system: For a 3D system, the Curie temperature is always above zero, while a one-dimensional system can only be in a ferromagnetic state at $T=0$. 
+
+In 2D systems, long range ordering of the spins is normally prohibited by the \href{https://en.wikipedia.org/wiki/Mermin\%E2\%80\%93Wagner_theorem}{Mermin-Wagner theorem}. The theorem states that the spontaneous symmetry breaking required for magnetism is not possible in isotropic two dimensional magnetic systems. Specifically, spin waves (magnons) in this case have a finite density of states and are gapless. These magnons are therefore easy to excite which destroys long range magnetic order. Thus for  \href{https://en.wikipedia.org/wiki/Magnetic_2D_materials}{magnetism to arise in 2D materials}, a source of magnetic anisotropy is required. For systems such as $\mathrm{CI}_3$ and $\mathrm{Fe}_3\mathrm{GeTe}_2$, there exists an intrinsic anisotropy due to spin-orbit coupling which allows the materials to be magnetic down to the monolayer limit. 
+
+\section*{Sources}
+\begin{itemize}
+    \item Introduction to Solid State Physics $8^{\mathrm{th}}$ edition by Kittel.
+    \item Wikipedia (see hyperlinks) 
+\end{itemize}
+
+
+
+% The exchange field is mathematically equivalent to a magnetic field\footnote{Not technically a real magnetic field} $\textbf{B}_E$. Using the mean field approximation, this field can defined as 
+% \begin{equation}\label{eq:BexM}
+%     \textbf{B}_E = \lambda\textbf{M}
+% \end{equation}
+% where $\textbf{M}$ is the magnetization (magnetic moment per unit volume) and $\lambda$ is a constant known as the mean field constant. Next the \textbf{Curie Temperature} can be defined as the temperature above which the spontaneous magnetization vanishes. It represents the transition point between a disordered paramagnetic phase and an ordered ferromagnetic phase, and can be found in terms of $\lambda$. 
+
+% Considering the paramagnetic phase: an applied field $\textbf{B}_A$ will cause a finite magnetization and in turn a finite exchange field. If $\chi_p$ is the paramagnetic suceptibility, 
+% \begin{equation}\label{eq:paraMagSus}
+%     \textbf{M} = \chi_p\lrp{\textbf{B}_A + \textbf{B}_E}
+% \end{equation}
+% By applying \href{https://en.wikipedia.org/wiki/Curie\%27s_law}{Curie's Law} for paramagnetism, $\chi_p = \nicefrac{C}{T}$ where $C$ is the \href{https://en.wikipedia.org/wiki/Curie_constant}{Curie Constant} defined as 
+% \begin{equation}\label{eq:Curieconst}
+%     C = \frac{\mu_B^2}{3k_B}Ng^2J(J+1)
+% \end{equation}
+% Here$\mu_B$ is the \href{https://en.wikipedia.org/wiki/Bohr_magneton}{Bohr magneton}, $g$ is the \href{https://en.wikipedia.org/wiki/Land\%C3\%A9_g-factor}{Landé g-factor}, $J$ is the \href{https://en.wikipedia.org/wiki/Azimuthal_quantum_number}{angular momentum quantum number}, and $k_B$ is Boltzmann's constnant. Combining equations \eqref{eq:BexM} and \eqref{eq:paraMagSus}, the susceptibility becomes
+% \begin{equation}\label{eq:preCWlaw}
+%     \chi = \frac{C}{T-C\lambda}
+% \end{equation}
+% This expression has a singularity at $T=C\lambda$, and at that temperature and below there exists a spontaneous magnetization. Thus from \eqref{eq:preCWlaw} the \href{https://en.wikipedia.org/wiki/Curie\%E2\%80\%93Weiss_law}{Cure-Weiss law} and the Cuire Temperature $T_c$ can be defined 
+% \begin{equation}\label{eq:CWlaw}
+%     \chi = \frac{C}{T-T_c} \quad T_c \equiv C\lambda
+% \end{equation}
+
+\end{document}
