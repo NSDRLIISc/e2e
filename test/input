@@ -1,0 +1,7 @@
+structure_file = 1743.json
+VASP_command_std = mpirun -n 4 vasp_gpu > vasp.log
+VASP_command_ncl = mpirun -n 4 vasp_gpu_ncl > vasp.log
+max_neighbors = 5
+GPU_accel = True
+more_than_2_metal_layers = False
+NSIM = 12

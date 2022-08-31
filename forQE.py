@@ -2,9 +2,9 @@
 
 from pymatgen.core import Structure
 from pymatgen.core.periodic_table import Element
-from pymatgen.core.analysis.magnetism.analyzer import MagneticStructureEnumerator, CollinearMagneticStructureAnalyzer
-from pymatgen.core.io import pwscf
-from pymatgen.core.command_line.bader_caller import bader_analysis_from_objects
+# from pymatgen.core.analysis.magnetism.analyzer import MagneticStructureEnumerator, CollinearMagneticStructureAnalyzer
+# from pymatgen.core.io import pwscf
+# from pymatgen.core.command_line.bader_caller import bader_analysis_from_objects
 import sys
 import os
 from shutil import copyfile
@@ -43,7 +43,9 @@ LDAUJ_povided = {}
 LDAUU_povided = {}
 LDAUL_povided = {}
 
-
+# input_Dict = {
+#     'structure_file' : 12
+# }
 with open('input') as f: 
     for line in f:
         row = line.split()
